@@ -1,0 +1,28 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-header {
+    height: 40px;
+    margin: 0;
+}
+
+.app-body {
+    min-height: calc(100vh - 40px);
+}
+
+.navbar-nav .nav-item.active .nav-link {
+    color: #fff;
+}
+
+@media (min-width: 768px) {
+    .sidebar .nav-item .nav-link {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 1rem;
+        width: 225px;
+    }
+}
