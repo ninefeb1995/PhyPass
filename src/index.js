@@ -1,16 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { IntlProvider } from 'react-intl';
 import './lib/jquery';
 import './lib/bootstrap';
 import './lib/font-awesome';
+import { HashRouter, Route } from 'react-router-dom';
+import { Home } from './app/layout/home.component';
 
 ReactDOM.render(
     <IntlProvider locale="en">
-        <App />
+        <HashRouter>
+            <div className="main">
+                <Route exact path='/' component={Home} />
+            </div>
+        </HashRouter>
     </IntlProvider>,
     document.getElementById('root')
 );
