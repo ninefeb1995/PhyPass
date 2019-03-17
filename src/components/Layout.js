@@ -7,14 +7,24 @@ export class Layout extends Component {
 
     render() {
         return(
-            <div id="page" class="navbar-top">
+            <div id="page" className="navbar-top">
                 <NavMenu />
 
-                <div class="page-content">
+                <div className="page-content">
                     <SideBar />
 
-                    <div class="content-wrapper">
-                        {this.props.children}
+                    <div className="content-wrapper">
+                        <div className="page-header">
+                            <div className="page-header-content header-elements-md-inline">
+                            </div>
+                        </div>
+                        <div className="content pt-0">
+                            <div className="row">
+                                <div className="col-xl-12">
+                                    {this.props.children}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

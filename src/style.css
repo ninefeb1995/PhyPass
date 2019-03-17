@@ -1,0 +1,36 @@
+.page-header {
+    padding-top: 2.28%;
+}
+
+.btn-xl {
+    width: 100px;
+    height: 100px;
+    line-height: 3.333;
+    font-size: 25px;
+    color: black;
+}
+
+.jc-center {
+    justify-content: center;
+}
+
+.card-content {
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    margin: 18px -18px -18px -18px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.font-xx-large {
+    color: black;
+    font-size: xx-large;
+}
+
+.font-small {
+    color: black;
+    font-size: small;
+}
