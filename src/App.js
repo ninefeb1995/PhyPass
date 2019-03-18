@@ -17,7 +17,7 @@ export default class App extends Component {
         <Route exact path='/report' component={Report} />
         <Route exact path='/staff' component={Staff} />
         <Route exact path='/category' component={Category} />
-        <Route exact path='/conveyor/details' component={ConveyorDetail} />
+        <Route exact path='/conveyor/details/:id' component={ConveyorDetail} />
       </Layout>
     );
   }

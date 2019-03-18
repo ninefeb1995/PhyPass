@@ -1,21 +1,39 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import * as DashBoardService from '../../app/services/dashboard';
 
 export class ConveyorDetail extends Component {
     displayName = ConveyorDetail.name;
 
-    GetContentModal(status) {
+    constructor(props) {
+        super(props);
+        this.state = {
+            conveyorDetail: null
+        };
+    }
+
+    componentDidMount() {
+        const { id }  = this.props.match.params;
+        DashBoardService.getInvoiceDetail(id, (data) => {
+            if (data.data.err === 0) {
+                this.setState({conveyorDetail: data.data});
+            }
+        });
+    }
+
+    getContentModal(status) {
         switch(status)
         {
             case '0':
-                return <InvoiceModal />;
+                return <InvoiceModal invoice = {this.state.conveyorDetail} />;
             default:
                 return <DetailModal />;
         }
     }
 
     render() {
-        let contentModal = this.GetContentModal('');
+        let contentModal = this.getContentModal('');
+
         return (
             <div>
                 {contentModal}
@@ -147,11 +165,16 @@ export class ButtonField extends Component {
 export class InvoiceModal extends Component {
     displayName = InvoiceModal.name;
 
+    constructor(props) {
+        super(props);
+    }
+
     addNew() {
 
     }
 
     render() {
+        const { information } = this.props;
         return (
             <div className="card">
                 <div className="card-header header-elements-sm-inline">
