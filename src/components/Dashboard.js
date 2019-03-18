@@ -14,7 +14,6 @@ export class Dashboard extends Component {
 
     componentDidMount() {
         DashBoardService.getListOfConveyor(1, 50, (data) => {
-            console.log(data.data);
             if (data.data.err === 0) {
                 this.setState({listConveyors: data.data.data})
             }
@@ -24,8 +23,8 @@ export class Dashboard extends Component {
         let conveyors = [];
         for (let i = 0; i < this.state.listConveyors.length; i++) {
             let item = 
-                <div className="col-lg-4">
-                    <Conveyor information = {this.state.listConveyors[i]} />;
+                <div key={i} className="col-lg-3">
+                    <Conveyor information = {this.state.listConveyors[i]} />
                 </div>
             conveyors.push(item);
         }
