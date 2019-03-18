@@ -3,8 +3,12 @@ import Modal from 'react-responsive-modal';
 
 export class CategoryList extends Component {
     displayName = CategoryList.name;
-    state = {
-        open: false
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false
+        }
     }
 
     onOpenModal = () => {
@@ -69,6 +73,17 @@ export class SubCategory extends Component {
 export class NewCategoryFormModal extends Component {
     displayName = NewCategoryFormModal.name;
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            categoryName: ''
+        }
+    }
+
+    updateNameValue(event) {
+        this.setState({categoryName: event.target.value});
+    }
+
     render() {
         return (
             <div>
@@ -77,17 +92,13 @@ export class NewCategoryFormModal extends Component {
                     </div> 
                     <div className="col-md-10">
                         <div className="form-group">
-                            <label for="subCategoryName">Name</label>
-                            <input type="text" id="subCategoryName" className="form-control" />
+                            <label htmlFor="subCategoryName">Name</label>
+                            <input type="text" id="subCategoryName" className="form-control" onChange={(event) => this.updateNameValue(event)} />
                         </div>
                         <div className="form-group">
-                            <label for="parentCategoryID">Parent Category (Optional)</label>
+                            <label htmlFor="parentCategoryID">Parent Category (Optional)</label>
                             <select className="form-control" id="parentCategoryName">
-                                <option>552_1</option>
-                                <option>552_1</option>
-                                <option>552_1</option>
-                                <option>552_1</option>
-                                <option>552_1</option>
+                                <option>None</option>
                             </select>
                         </div>
                     </div>

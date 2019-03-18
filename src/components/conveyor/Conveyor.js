@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from 'react-responsive-modal';
+import * as DashBoardService from '../../app/services/dashboard';
 
 export class Conveyor extends Component {
     displayName = Conveyor.name;
@@ -8,8 +9,7 @@ export class Conveyor extends Component {
         openConveyorDetailModal: false,
         openNewInvoiceModal: false
     }
-
-    
+ 
     constructor(props) {
         super(props);
     }
@@ -54,7 +54,7 @@ export class Conveyor extends Component {
 
         return (
             <div className="card">
-                <div className={"card-body " + this.getBgColorClassName(information.status)} onClick={this.onOpenModal.bind(this, information.status)} style={{cursor : 'pointer'}}>
+                <div className={"card-body " + this.getBgColorClassName(information.status)} onClick={this.onOpenModal.bind(this, information)} style={{cursor : 'pointer'}}>
                     <div className="d-flex jc-center">
                         <div className="btn rounded-round btn-xl bg-white">
                             {information.stats * 100} %
@@ -72,7 +72,7 @@ export class Conveyor extends Component {
                     </div>
                 </div>
                 <Modal open={openConveyorDetailModal} onClose={this.onCloseConveyorDetailModal} center >
-                    <ConveyorDetailModal status={information.status} />
+                    <ConveyorDetailModal baseConveyorInfo={information} />
                 </Modal>
                 <Modal open={openNewInvoiceModal} onClose={this.onCloseNewInvoiceModal} center>
                     <NewInvoiceModal />
@@ -85,14 +85,29 @@ export class Conveyor extends Component {
 export class ConveyorDetailModal extends Component {
     displayName = ConveyorDetailModal.name;
 
-    render() {
-        const status = this.props.status;
+    constructor(props) {
+        super(props);     
+        this.state = {
+            conveyorDetail: null
+        };
+    }
 
+    componentDidMount() {
+        const { baseConveyorInfo } = this.props;
+        DashBoardService.getInvoiceDetail(baseConveyorInfo.id, (data) => {
+            if (data.data.err === 0) {         
+                this.setState({conveyorDetail: data.data.data});
+            }
+        });
+    }
+
+    render() {
         return (
+            this.state.conveyorDetail ? 
             <div>
                 <div className="card-header header-elements-sm-inline">
                     <h4 className="card-title font-weight-bold">
-                        CONVEYOR 1
+                        CONVEYOR {this.state.conveyorDetail.conveyor.id}
                     </h4>
                 </div>
                 <div className="card-body align-items-sm-center justify-content-sm-between flex-sm-wrap">
@@ -104,7 +119,7 @@ export class ConveyorDetailModal extends Component {
                         </div>
                         <div className="ml-3">
                             <h4 className="card-title">
-                                <span className="font-weight-semibold">100%</span>
+                                <span className="font-weight-semibold">{this.state.conveyorDetail.stats * 100} %</span>
                             </h4>
                         </div>
                     </div>
@@ -116,7 +131,7 @@ export class ConveyorDetailModal extends Component {
                         </div>
                         <div className="ml-3">
                             <h4 className="card-title">
-                                #11111111
+                                #{this.state.conveyorDetail.code}
                             </h4>
                         </div>
                     </div>
@@ -131,23 +146,30 @@ export class ConveyorDetailModal extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>551</td>
-                                <td>50</td>
-                                <td>15</td>
-                            </tr>
+                            {this.state.conveyorDetail.details.map((value) => {
+                                return <tr>
+                                        <td>{value.skuId}</td>
+                                        <td>{value.targetQuantity}</td>
+                                        <td>{value.currentQuantity}</td>
+                                    </tr>
+                            })}
                         </tbody>
                     </table>
                 </div>
 
-                <ButtonField status={status} />
+                <ButtonField status={this.props.baseConveyorInfo.status} />
             </div>
+            : <div></div>
         );
     }
 }
 
 export class ButtonField extends Component {
     displayName = ButtonField.name;
+
+    constructor(props) {
+        super(props);
+    }
 
     renderButtonField(status) {
         switch (status)
