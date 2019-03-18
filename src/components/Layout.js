@@ -13,7 +13,7 @@ export class Layout extends Component {
                 <div className="page-content">
                     <SideBar />
 
-                    <div className="content-wrapper">
+                    <div className="bg-white content-wrapper">
                         <div className="page-header">
                             <div className="page-header-content header-elements-md-inline">
                             </div>

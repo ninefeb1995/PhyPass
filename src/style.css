@@ -17,7 +17,7 @@
 .card-content {
     padding: 15px;
     background-color: #fff;
-    border-radius: 10px;
+    border-radius: 5px;
     margin: 18px -18px -18px -18px;
 }
 
@@ -37,4 +37,19 @@
 
 .close {
     font-size: 2.25003rem;
+}
+
+.styles_overlay__CLSq- {
+    padding: 5rem 1.2rem 1.2rem 1.2rem;
+}
+
+.styles_modal__gNwvD {
+    max-width: unset;
+    width: 80rem;
+    min-height: calc(100vh - 100px);
+}
+
+.styles_closeIcon__1QwbI
+{
+    cursor: pointer;
 }
