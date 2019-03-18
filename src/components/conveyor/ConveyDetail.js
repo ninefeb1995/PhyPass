@@ -35,7 +35,7 @@ export class DetailModal extends Component {
                         CONVEYOR 1
                     </h4>
                     <div className="header-elements">
-                        <Link to={'/'} class="close">
+                        <Link to={'/'} className="close">
                             <span aria-hidden="true">&times;</span>
                         </Link>
                     </div>
@@ -159,7 +159,7 @@ export class InvoiceModal extends Component {
                         CONVEYOR 1
                     </h4>
                     <div className="header-elements">
-                        <Link to={'/'} class="close">
+                        <Link to={'/'} className="close">
                             <span aria-hidden="true">&times;</span>
                         </Link>
                     </div>
@@ -184,8 +184,8 @@ export class InvoiceModal extends Component {
                             </h4>
                         </div>
                         <div className="ml-3">
-                            <div class="form-group">
-                                <select class="form-control" id="invoiceID">
+                            <div className="form-group">
+                                <select className="form-control" id="invoiceID">
                                     <option>None</option>
                                     <option>1</option>
                                     <option>2</option>
@@ -202,8 +202,8 @@ export class InvoiceModal extends Component {
                             </h4>
                         </div>
                         <div className="ml-3">
-                            <div class="form-group">
-                                <select class="form-control" id="invoiceID">
+                            <div className="form-group">
+                                <select className="form-control" id="invoiceID">
                                     <option>None</option>
                                     <option>Nguyen Van A</option>
                                     <option>B</option>
@@ -226,8 +226,8 @@ export class InvoiceModal extends Component {
                         <tbody id="tbodyID">
                             <tr>
                                 <td>
-                                    <div class="form-group">
-                                        <select class="form-control" id="invoiceID">
+                                    <div className="form-group">
+                                        <select className="form-control" id="invoiceID">
                                             <option>None</option>
                                             <option>551</option>
                                             <option>22</option>
@@ -237,8 +237,8 @@ export class InvoiceModal extends Component {
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="form-group">
-                                        <input type="number" class="form-control" id="targetID" />
+                                    <div className="form-group">
+                                        <input type="number" className="form-control" id="targetID" />
                                     </div>
                                 </td>
                                 <td className="bg-darken-3">0</td>
@@ -256,7 +256,7 @@ export class InvoiceModal extends Component {
                     </table>
                 </div>
 
-                <div class="card-footer">
+                <div className="card-footer">
                     <div className="row">
                         <div className="col-xl-10"></div>
                         <div className="col-xl-2">
