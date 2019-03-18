@@ -26,7 +26,7 @@ export class Conveyor extends Component {
                             </Link>
                             <br />
                             <Link to={'/staff/details'} className="font-small">
-                                {information.staff.name}
+                                {information.staff ? information.staff.name : ''}
                             </Link>
                         </div>
                     </div>

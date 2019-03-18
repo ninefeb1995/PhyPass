@@ -14,6 +14,7 @@ export class Dashboard extends Component {
 
     componentDidMount() {
         DashBoardService.getListOfConveyor(1, 50, (data) => {
+            console.log(data.data);
             if (data.data.err === 0) {
                 this.setState({listConveyors: data.data.data})
             }
