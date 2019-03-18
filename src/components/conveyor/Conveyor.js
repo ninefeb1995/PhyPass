@@ -20,7 +20,7 @@ export class Conveyor extends Component {
                         </Link>
                     </div>
                     <div className="card-content">
-                        <div className="text-center">
+                        <div className="ta-center">
                             <Link to={'/conveyor/details'} className="font-xx-large">
                                 Conveyor {information.id}
                             </Link>

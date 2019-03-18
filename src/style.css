@@ -21,7 +21,7 @@
     margin: 18px -18px -18px -18px;
 }
 
-.text-center {
+.ta-center {
     text-align: center;
 }
 
@@ -33,4 +33,8 @@
 .font-small {
     color: black;
     font-size: small;
+}
+
+.close {
+    font-size: 2.25003rem;
 }
