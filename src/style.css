@@ -39,17 +39,22 @@
     font-size: 2.25003rem;
 }
 
-.styles_overlay__CLSq- {
+.overlay-div-modal {
     padding: 5rem 1.2rem 1.2rem 1.2rem;
 }
 
-.styles_modal__gNwvD {
+.modal-div-modal-xl {
     max-width: unset;
     width: 80rem;
     min-height: calc(100vh - 100px);
 }
 
-.styles_closeIcon__1QwbI
+.modal-div-modal-sm {
+    width: 60rem;
+    height: 20rem;
+}
+
+.close-button-modal
 {
     cursor: pointer;
 }

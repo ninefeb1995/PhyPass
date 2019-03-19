@@ -49,7 +49,7 @@ export class StaffList extends Component {
                 <div className="card-body d-sm-flex align-items-sm-center justify-content-sm-between flex-sm-wrap">
                     <div className="d-flex align-items-center mb-3 mb-sm-0">
                         <button className="btn btn-success btn-sm btn-block" onClick={this.onOpenModal}>Create</button>
-                        <Modal open = {open} onClose={this.onCloseModal} center>
+                        <Modal open = {open} onClose={this.onCloseModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}}>
                             <CreateUserModal onCreateUser={this.userCreated} />
                         </Modal>
                     </div>
@@ -79,7 +79,7 @@ export class StaffList extends Component {
                         </thead>
                         <tbody>
                             {listStaff.map((item) => {
-                              return <Staff information={item} />
+                              return <Staff key={item.id} information={item} />
                             })}
                         </tbody>
                     </table>
@@ -95,16 +95,25 @@ export class Staff extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false
+            openEditUserModal: false,
+            openRemoveUserModal: false
         }
     }
 
-    onOpenModal = () => {
-        this.setState({open: true});
+    onOpenEditUserModal = () => {
+        this.setState({openEditUserModal: true});
     }
 
-    onCloseModal = () => {
-        this.setState({open: false});
+    onCloseEditUserModal = () => {
+        this.setState({openEditUserModal: false});
+    }
+
+    onOpenRemoveUserModal = () => {
+        this.setState({openRemoveUserModal: true});
+    }
+
+    onCloseRemoveUserModal = () => {
+        this.setState({openRemoveUserModal: false});
     }
 
     parseRole(id) {
@@ -121,7 +130,7 @@ export class Staff extends Component {
     }
 
     render() {
-        const { open } = this.state;
+        const { openEditUserModal, openRemoveUserModal } = this.state;
         const { information } = this.props;
 
         return (
@@ -142,11 +151,18 @@ export class Staff extends Component {
                     {this.parseRole(information.role)}
                 </td>
                 <td>
-                    <button className="btn bg-transparent border-success text-success rounded-round border-2 btn-icon" onClick={this.onOpenModal}>
+                    <button className="btn bg-transparent border-success text-success rounded-round border-2 btn-icon" onClick={this.onOpenEditUserModal} title="Edit User">
                         <i className="icon-pencil"></i>
                     </button>
-                    <Modal open = {open} onClose={this.onCloseModal} center>
+                    <i style={{marginLeft: "1px"}}></i>
+                    <button className="btn bg-transparent border-warning-400 text-warning-400 rounded-round border-2 btn-icon" onClick={this.onOpenRemoveUserModal} title="Remove User">
+                        <i className="icon-bin"></i>
+                    </button>
+                    <Modal open = {openEditUserModal} onClose={this.onCloseEditUserModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}}>
                         <EditUserModal />
+                    </Modal>
+                    <Modal open = {openRemoveUserModal} onClose={this.onCloseRemoveUserModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-sm", closeButton: "close-button-modal"}}>
+                        <RemoveUserModal />
                     </Modal>
                 </td>
             </tr>
@@ -285,6 +301,40 @@ export class EditUserModal extends Component {
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        );
+    }
+}
+
+export class RemoveUserModal extends Component {
+    displayName = RemoveUserModal.name;
+
+    render () {
+        return (
+            <div>
+                <div className="card-header header-elements-sm-inline">
+                </div>
+                <div className="card-body">
+                    <div className="row">
+                        <div className="col-sm-3"></div>
+                        <div className="col-sm-6 text-center">
+                            <h5 className="card-title">Are you sure to remove this user?</h5>
+                        </div>
+                        <div className="col-sm-3"></div>
+                    </div>
+                </div>
+                <div className="card-footer">
+                    <div className="row">
+                        <div className="col-sm-4"></div>
+                        <div className="col-sm-2">
+                            <button className="btn btn-sm btn-block">No</button>
+                        </div>
+                        <div className="col-sm-2">
+                            <button className="btn btn-primary btn-sm btn-block">Yes</button>
+                        </div>
+                        <div className="col-sm-4"></div>
+                    </div>
                 </div>
             </div>
         );

@@ -62,7 +62,7 @@ export class CategoryList extends Component {
                 <div className="card-header header-elements-inline">
                     <div className="header-elements">
                     <button className="btn btn-success btn-lg btn-block" onClick={this.onOpenModal}>New Category</button>
-                    <Modal open={open} onClose={this.onCloseModal} center>
+                    <Modal open={open} onClose={this.onCloseModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}}>
                         <NewCategoryFormModal listParents={this.state.parents} />
                     </Modal>
                     </div>
@@ -90,9 +90,9 @@ export class Category extends Component {
         const { information } = this.props;
 
         return (
-            <li className="nav-item nav-item-submenu">
+            <li className="nav-item nav-item-submenu nav-item-open">
                 <a className="nav-link">{information.name}</a>
-                <ul className="nav nav-group-sub">
+                <ul className="nav nav-group-sub" style={{display: "block"}}>
                     {information.children.map((item) => {
                         return <SubCategory information={item} />;
                     })}

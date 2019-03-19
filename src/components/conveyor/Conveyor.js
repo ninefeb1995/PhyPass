@@ -54,7 +54,7 @@ export class Conveyor extends Component {
 
         return (
             <div className="card">
-                <div className={"card-body " + this.getBgColorClassName(information.status)} onClick={this.onOpenModal.bind(this, information)} style={{cursor : 'pointer'}}>
+                <div className={"card-body " + this.getBgColorClassName(information.status)} onClick={this.onOpenModal.bind(this, information.status)} style={{cursor : 'pointer'}}>
                     <div className="d-flex jc-center">
                         <div className="btn rounded-round btn-xl bg-white">
                             {information.stats * 100} %
@@ -71,10 +71,10 @@ export class Conveyor extends Component {
                         </div>
                     </div>
                 </div>
-                <Modal open={openConveyorDetailModal} onClose={this.onCloseConveyorDetailModal} center >
+                <Modal open={openConveyorDetailModal} onClose={this.onCloseConveyorDetailModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}} >
                     <ConveyorDetailModal baseConveyorInfo={information} />
                 </Modal>
-                <Modal open={openNewInvoiceModal} onClose={this.onCloseNewInvoiceModal} center>
+                <Modal open={openNewInvoiceModal} onClose={this.onCloseNewInvoiceModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}}>
                     <NewInvoiceModal />
                 </Modal>
             </div>
@@ -147,7 +147,7 @@ export class ConveyorDetailModal extends Component {
                         </thead>
                         <tbody>
                             {this.state.conveyorDetail.details.map((value) => {
-                                return <tr>
+                                return <tr key={value.skuId}>
                                     <td>{value.skuId}</td>
                                     <td>{value.targetQuantity}</td>
                                     <td>{value.currentQuantity}</td>
@@ -227,8 +227,8 @@ export class ButtonField extends Component {
 export class NewInvoiceModal extends Component {
     displayName = NewInvoiceModal.name;
 
-    addNew() {
-
+    addNewRow = () => {
+        
     }
 
     render() {
@@ -324,7 +324,7 @@ export class NewInvoiceModal extends Component {
                                 <td></td>
                                 <td></td>
                                 <td align="right">
-                                    <button className="btn btn-outline-dark btn-lg" onClick={this.addNew()}>Add New</button>
+                                    <button className="btn btn-outline-dark btn-lg" onClick={this.addNewRow}>Add New</button>
                                 </td>
                             </tr>
                         </tfoot>
