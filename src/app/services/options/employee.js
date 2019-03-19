@@ -1,8 +1,8 @@
 import axios from 'axios';
-import * as Config from '../config';
+import * as Config from '../../config';
 
-const getListEmployee = (pageNumber, pageSize, callback) => {
-    axios.get(Config.getPath('staff/getList/'), {
+export const getListEmployee = (pageNumber, pageSize, callback) => {
+    axios.get(Config.getPath('staff/getlist'), {
         params: {
             p: pageNumber,
             c: pageSize
@@ -12,8 +12,8 @@ const getListEmployee = (pageNumber, pageSize, callback) => {
     .catch((err) => callback(err));
 };
 
-const getEmployeeById = (id, callback) => {
-    axios.get(Config.getPath('staff/get/'), {
+export const getEmployeeById = (id, callback) => {
+    axios.get(Config.getPath('staff/get'), {
         params: {
             id: id
         }
@@ -22,20 +22,21 @@ const getEmployeeById = (id, callback) => {
     .catch((err) => callback(err));
 };
 
-const addNewEmployee = (data, callback) => {
-    axios.post(Config.getPath('staff/add/'), data)
+export const addNewEmployee = async (data, callback) => {
+    let res = await axios.get(Config.getPath('staff/add'), {
+        params: data
+    });
+    callback(res);
+};
+
+export const updateEmployee = (data, callback) => {
+    axios.put(Config.getPath('staff/edit'), data)
     .then((res) => callback(res))
     .catch((err) => callback(err));
 };
 
-const updateEmployee = (data, callback) => {
-    axios.put(Config.getPath('staff/edit/'), data)
-    .then((res) => callback(res))
-    .catch((err) => callback(err));
-};
-
-const deleteEmployeeById = (id, callback) => {
-    axios.delete(Config.getPath('staff/delete/'), {
+export const deleteEmployeeById = (id, callback) => {
+    axios.delete(Config.getPath('staff/delete'), {
         params: {
             id: id
         }

@@ -13,9 +13,9 @@ export class Dashboard extends Component {
     }
 
     componentDidMount() {
-        DashBoardService.getListOfConveyor(1, 50, (data) => {
-            if (data.data.err === 0) {
-                this.setState({listConveyors: data.data.data});
+        DashBoardService.getListOfConveyor(1, 50, (res) => {
+            if (res.data.err === 0) {
+                this.setState({listConveyors: res.data.data});
             }
         });
     }

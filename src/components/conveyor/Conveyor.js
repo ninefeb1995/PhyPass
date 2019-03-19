@@ -148,10 +148,10 @@ export class ConveyorDetailModal extends Component {
                         <tbody>
                             {this.state.conveyorDetail.details.map((value) => {
                                 return <tr>
-                                        <td>{value.skuId}</td>
-                                        <td>{value.targetQuantity}</td>
-                                        <td>{value.currentQuantity}</td>
-                                    </tr>
+                                    <td>{value.skuId}</td>
+                                    <td>{value.targetQuantity}</td>
+                                    <td>{value.currentQuantity}</td>
+                                </tr>
                             })}
                         </tbody>
                     </table>
@@ -330,7 +330,6 @@ export class NewInvoiceModal extends Component {
                         </tfoot>
                     </table>
                 </div>
-
                 <div className="card-footer">
                     <div className="row">
                         <div className="col-xl-10"></div>
