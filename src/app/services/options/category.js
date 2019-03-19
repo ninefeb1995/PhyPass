@@ -1,8 +1,8 @@
 import axios from 'axios';
-import * as Config from '../config';
+import * as Config from '../../config';
 
-const getListSku = (pageNumber, pageSize, callback) => {
-    axios.get(Config.getPath('sku/getList/'), {
+export const getListSku = (pageNumber, pageSize, callback) => {
+    axios.get(Config.getPath('sku/getlist'), {
         params: {
             p: pageNumber,
             c: pageSize
@@ -12,8 +12,8 @@ const getListSku = (pageNumber, pageSize, callback) => {
     .catch((err) => callback(err));
 };
 
-const getSkuById = (id, callback) => {
-    axios.get(Config.getPath('sku/get/'), {
+export const getSkuById = (id, callback) => {
+    axios.get(Config.getPath('sku/get'), {
         params: {
             id: id
         }
@@ -22,20 +22,20 @@ const getSkuById = (id, callback) => {
     .catch((err) => callback(err));
 };
 
-const addNewSku = (data, callback) => {
-    axios.post(Config.getPath('sku/add/'), data)
+export const addNewSku = (data, callback) => {
+    axios.post(Config.getPath('sku/add'), data)
     .then((res) => callback(res))
     .catch((err) => callback(err));
 };
 
-const updateSku = (data, callback) => {
-    axios.put(Config.getPath('sku/edit/'), data)
+export const updateSku = (data, callback) => {
+    axios.put(Config.getPath('sku/edit'), data)
     .then((res) => callback(res))
     .catch((err) => callback(err));
 };
 
-const deleteSkuById = (id, callback) => {
-    axios.delete(Config.getPath('sku/delete/'), {
+export const deleteSkuById = (id, callback) => {
+    axios.delete(Config.getPath('sku/delete'), {
         params: {
             id: id
         }
