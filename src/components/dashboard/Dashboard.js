@@ -30,7 +30,7 @@ export class Dashboard extends Component {
         this.setState({intervalId: intervalId});
     }
 
-    componentWillMount() {
+    componentWillUnmount() {
         clearInterval(this.state.intervalId);
     }
 
