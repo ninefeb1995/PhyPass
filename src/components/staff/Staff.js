@@ -36,12 +36,14 @@ export class StaffList extends Component {
             const temp = this.state.listStaff.slice();
             temp.push(data);
             this.setState({listStaff: temp});
+            this.onCloseModal();
         }
     }
 
     onDeleteStaff(id) {
-        let listStaffTemp = this.listStaff.filter((item) => item.id !== id);
+        let listStaffTemp = this.state.listStaff.filter((item) => item.id !== id);
         this.setState({listStaff: listStaffTemp});
+        this.onCloseModal();
     }
 
     render() {
@@ -56,7 +58,7 @@ export class StaffList extends Component {
                     <div className="d-flex align-items-center mb-3 mb-sm-0">
                         <button className="btn btn-success btn-sm btn-block" onClick={this.onOpenModal}>Create</button>
                         <Modal open = {open} onClose={this.onCloseModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}}>
-                            <CreateUserModal onCreateUser={this.userCreated} />
+                            <CreateUserModal onClose={this.onCloseModal} onCreateUser={this.userCreated} />
                         </Modal>
                     </div>
                     <div className="d-flex align-items-center mb-3 mb-sm-0">
@@ -132,10 +134,12 @@ export class Staff extends Component {
 
     onUserEdited(data) {
         this.setState({information:data});
+        this.onCloseEditUserModal();
     }
 
     onDeleteEmit() {
         this.props.onUserDeleted(this.state.information.id);
+        this.onCloseRemoveUserModal();
     }
 
     parseRole(id) {
@@ -180,10 +184,10 @@ export class Staff extends Component {
                         <i className="icon-bin"></i>
                     </button>
                     <Modal open={openEditUserModal} onClose={this.onCloseEditUserModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}}>
-                        <EditUserModal baseData={information} onEditUser={this.onUserEdited} />
+                        <EditUserModal onClose={this.onCloseEditUserModal} baseData={information} onEditUser={this.onUserEdited} />
                     </Modal>
                     <Modal open={openRemoveUserModal} onClose={this.onCloseRemoveUserModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-sm", closeButton: "close-button-modal"}}>
-                        <RemoveUserModal onDelete={this.onDeleteEmit} />
+                        <RemoveUserModal onClose={this.onCloseRemoveUserModal} onDelete={this.onDeleteEmit} />
                     </Modal>
                 </td>
             </tr>
@@ -253,7 +257,7 @@ export class CreateUserModal extends Component {
                                     <div className="row">
                                         <div className="col-xl-7"></div>
                                         <div className="col-xl-2">
-                                            <button className="btn btn-secondary btn-lg btn-block">Cancel</button>
+                                            <button onClick={() => this.props.onClose()} className="btn btn-secondary btn-lg btn-block">Cancel</button>
                                         </div>
                                         <div className="col-xl-3">
                                             <button onClick={() => this.onClickCreateUser()} className="btn btn-success btn-lg btn-block">Create User</button>
@@ -340,7 +344,7 @@ export class EditUserModal extends Component {
                                     <div className="row">
                                         <div className="col-xl-7"></div>
                                         <div className="col-xl-2">
-                                            <button className="btn btn-secondary btn-lg btn-block">Cancel</button>
+                                            <button onClick={() => this.props.onClose()} className="btn btn-secondary btn-lg btn-block">Cancel</button>
                                         </div>
                                         <div className="col-xl-3">
                                             <button onClick={() => this.onClickEditUser()} className="btn btn-success btn-lg btn-block">Edit User</button>
@@ -377,10 +381,10 @@ export class RemoveUserModal extends Component {
                     <div className="row">
                         <div className="col-sm-4"></div>
                         <div className="col-sm-2">
-                            <button className="btn btn-sm btn-block">No</button>
+                            <button onClick={() => this.props.onClose()} className="btn btn-sm btn-block">No</button>
                         </div>
                         <div className="col-sm-2">
-                            <button className="btn btn-primary btn-sm btn-block">Yes</button>
+                            <button onClick={() => this.props.onDelete()} className="btn btn-primary btn-sm btn-block">Yes</button>
                         </div>
                         <div className="col-sm-4"></div>
                     </div>

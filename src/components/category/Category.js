@@ -39,6 +39,7 @@ export class CategoryList extends Component {
             temp.push(data);
             this.setState({listSkusRaw: temp});
             this.handleRawData();
+            this.onCloseModal();
         }
     }
 
