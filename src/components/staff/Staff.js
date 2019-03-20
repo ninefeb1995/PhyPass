@@ -12,6 +12,7 @@ export class StaffList extends Component {
             listStaff: []
         }
         this.userCreated = this.userCreated.bind(this);
+        this.onDeleteStaff = this.onDeleteStaff.bind(this);
     }
 
     componentWillMount() {
@@ -36,6 +37,11 @@ export class StaffList extends Component {
             temp.push(data);
             this.setState({listStaff: temp});
         }
+    }
+
+    onDeleteStaff(id) {
+        let listStaffTemp = this.listStaff.filter((item) => item.id !== id);
+        this.setState({listStaff: listStaffTemp});
     }
 
     render() {
@@ -79,7 +85,7 @@ export class StaffList extends Component {
                         </thead>
                         <tbody>
                             {listStaff.map((item) => {
-                              return <Staff key={item.id} information={item} />
+                              return <Staff onUserDeleted={this.onDeleteStaff} key={item.id} information={item} />
                             })}
                         </tbody>
                     </table>
@@ -129,7 +135,7 @@ export class Staff extends Component {
     }
 
     onDeleteEmit() {
-
+        this.props.onUserDeleted(this.state.information.id);
     }
 
     parseRole(id) {
