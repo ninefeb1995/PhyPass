@@ -22,10 +22,11 @@ export const getSkuById = (id, callback) => {
     .catch((err) => callback(err));
 };
 
-export const addNewSku = (data, callback) => {
-    axios.post(Config.getPath('sku/add'), data)
-    .then((res) => callback(res))
-    .catch((err) => callback(err));
+export const addNewSku = async (data, callback) => {
+    let res = await axios.get(Config.getPath('sku/add'), {
+        params: data
+    });
+    callback(res);
 };
 
 export const updateSku = (data, callback) => {

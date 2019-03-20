@@ -13,6 +13,7 @@ export class CategoryList extends Component {
             parents: [],
             children: []
         }
+        this.onCategoryCreated = this.onCategoryCreated.bind(this);
     }
 
     componentDidMount() {
@@ -22,6 +23,23 @@ export class CategoryList extends Component {
                 this.handleRawData();
             }
         });
+    }
+
+    onOpenModal = () => {
+        this.setState({open: true});
+    }
+
+    onCloseModal = () => {
+        this.setState({open: false});
+    }
+
+    onCategoryCreated(data) {
+        if (data) {
+            const temp = this.state.listSkusRaw.slice();
+            temp.push(data);
+            this.setState({listSkusRaw: temp});
+            this.handleRawData();
+        }
     }
 
     handleRawData() {
@@ -41,17 +59,8 @@ export class CategoryList extends Component {
                     parents[parentAt].children.push(child);
                 }
             });
-            this.setState({parents});
-            this.setState({parents});
+            this.setState({parents, children});
         }
-    }
-
-    onOpenModal = () => {
-        this.setState({open: true});
-    }
-
-    onCloseModal = () => {
-        this.setState({open: false});
     }
 
     render() {
@@ -63,7 +72,7 @@ export class CategoryList extends Component {
                     <div className="header-elements">
                     <button className="btn btn-success btn-lg btn-block" onClick={this.onOpenModal}>New Category</button>
                     <Modal open={open} onClose={this.onCloseModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}}>
-                        <NewCategoryFormModal listParents={this.state.parents} />
+                        <NewCategoryFormModal listParents={this.state.parents} onCreateCategory={this.onCategoryCreated} />
                     </Modal>
                     </div>
                 </div>
@@ -136,7 +145,15 @@ export class NewCategoryFormModal extends Component {
     }
 
     onCreateNewCategory() {
-
+        let data = {
+            name: this.state.categoryName,
+            parent_id: this.state.parentId
+        }
+        CategoryServices.addNewSku(data, (res) => {
+            if (res.data.err === 0) {
+                this.props.onCreateCategory(res.data.data);
+            }
+        });
     }
 
     render() {
@@ -153,8 +170,8 @@ export class NewCategoryFormModal extends Component {
                             <input type="text" id="subCategoryName" className="form-control" onChange={(event) => this.updateNameValue(event)} />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="parentCategoryID">Parent Category (Optional)</label>
-                            <select className="form-control" id="parentCategoryName">
+                            <label htmlFor="parentCategoryID">Parent Category (Optional):</label>
+                            <select className="form-control" id="parentCategoryName" onChange={(e) => this.setState({parentId: e.target.value})}>
                                 <option value="0">None</option>
                                 {listParents.map((item) => {
                                     return <option value={item.id}>{item.name}</option>;

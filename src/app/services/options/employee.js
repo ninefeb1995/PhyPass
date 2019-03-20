@@ -1,15 +1,14 @@
 import axios from 'axios';
 import * as Config from '../../config';
 
-export const getListEmployee = (pageNumber, pageSize, callback) => {
-    axios.get(Config.getPath('staff/getlist'), {
+export const getListEmployee = async (pageNumber, pageSize, callback) => {
+    let res = await axios.get(Config.getPath('staff/getlist'), {
         params: {
             p: pageNumber,
             c: pageSize
         }
-    })
-    .then((res) => callback(res))
-    .catch((err) => callback(err));
+    });
+    callback(res);
 };
 
 export const getEmployeeById = (id, callback) => {
@@ -29,10 +28,11 @@ export const addNewEmployee = async (data, callback) => {
     callback(res);
 };
 
-export const updateEmployee = (data, callback) => {
-    axios.put(Config.getPath('staff/edit'), data)
-    .then((res) => callback(res))
-    .catch((err) => callback(err));
+export const updateEmployee = async (data, callback) => {
+    let res = await axios.get(Config.getPath('staff/edit'), {
+        params: data
+    });
+    callback(res);
 };
 
 export const deleteEmployeeById = (id, callback) => {

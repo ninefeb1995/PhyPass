@@ -14,7 +14,7 @@ export class StaffList extends Component {
         this.userCreated = this.userCreated.bind(this);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         EmployeeServices.getListEmployee(1, 50, (res) => {
             if (res.data.err === 0) {
                 this.setState({listStaff: res.data.data});
@@ -30,10 +30,10 @@ export class StaffList extends Component {
         this.setState({open: false});
     }
 
-    userCreated(data) {
-        const temp = this.state.listStaff.slice();
-        temp.push(data);
+    userCreated(data) {    
         if (data) {
+            const temp = this.state.listStaff.slice();
+            temp.push(data);
             this.setState({listStaff: temp});
         }
     }
@@ -96,8 +96,16 @@ export class Staff extends Component {
         super(props);
         this.state = {
             openEditUserModal: false,
-            openRemoveUserModal: false
+            openRemoveUserModal: false,
+            information: undefined
         }
+        this.onUserEdited = this.onUserEdited.bind(this);
+        this.onDeleteEmit = this.onDeleteEmit.bind(this);
+    }
+
+    componentWillMount() {
+        const { information } = this.props;
+        this.setState({information});
     }
 
     onOpenEditUserModal = () => {
@@ -116,6 +124,14 @@ export class Staff extends Component {
         this.setState({openRemoveUserModal: false});
     }
 
+    onUserEdited(data) {
+        this.setState({information:data});
+    }
+
+    onDeleteEmit() {
+
+    }
+
     parseRole(id) {
         switch(id) {
             case 1:
@@ -130,9 +146,8 @@ export class Staff extends Component {
     }
 
     render() {
-        const { openEditUserModal, openRemoveUserModal } = this.state;
-        const { information } = this.props;
-
+        const { openEditUserModal, openRemoveUserModal, information } = this.state;
+        
         return (
             <tr>
                 <td>
@@ -158,11 +173,11 @@ export class Staff extends Component {
                     <button className="btn bg-transparent border-warning-400 text-warning-400 rounded-round border-2 btn-icon" onClick={this.onOpenRemoveUserModal} title="Remove User">
                         <i className="icon-bin"></i>
                     </button>
-                    <Modal open = {openEditUserModal} onClose={this.onCloseEditUserModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}}>
-                        <EditUserModal />
+                    <Modal open={openEditUserModal} onClose={this.onCloseEditUserModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}}>
+                        <EditUserModal baseData={information} onEditUser={this.onUserEdited} />
                     </Modal>
-                    <Modal open = {openRemoveUserModal} onClose={this.onCloseRemoveUserModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-sm", closeButton: "close-button-modal"}}>
-                        <RemoveUserModal />
+                    <Modal open={openRemoveUserModal} onClose={this.onCloseRemoveUserModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-sm", closeButton: "close-button-modal"}}>
+                        <RemoveUserModal onDelete={this.onDeleteEmit} />
                     </Modal>
                 </td>
             </tr>
@@ -189,7 +204,7 @@ export class CreateUserModal extends Component {
             role: this.state.role
         }
         EmployeeServices.addNewEmployee(data, (res) => {
-            if (res && res.data && res.data.err && res.data.err === 0) {
+            if (res.data.err === 0) {
                 this.props.onCreateUser(res.data.data);
             }
         });
@@ -251,37 +266,65 @@ export class CreateUserModal extends Component {
 export class EditUserModal extends Component {
     displayName = EditUserModal.name;
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            employeeName: '',
+            phoneNumber: '',
+            role: 1
+        };
+    }
+
+    componentWillMount() {
+        this.setState({
+            employeeName: this.props.baseData.name,
+            phoneNumber: this.props.baseData.phone,
+            role: this.props.baseData.role
+        });
+    }
+
+    onClickEditUser() {
+        let data = {
+            id: this.props.baseData.id,
+            name: this.state.employeeName,
+            phone: this.state.phoneNumber,
+            role: this.state.role
+        }
+        EmployeeServices.updateEmployee(data, (res) => {
+            if (res.data.err === 0) {
+                this.props.onEditUser(res.data.data);
+            }
+        });
+    }
+
     render() {
         return (
             <div>
                 <div className="card-header header-elements-sm-inline">
-                    <h4 className="card-title">Create Staff</h4>
+                    <h4 className="card-title">Edit Staff</h4>
                 </div>
-
                 <div className="table-responsive">
                     <table className="table text-nowrap">
                         <tbody>
                             <tr>
                                 <td>Name</td>
                                 <td>
-                                    <input type="text" className="form-control" value="Nguyen Viet Hung"/>
+                                    <input onChange={(e) => this.setState({employeeName:e.target.value})} value={this.state.employeeName} type="text" className="form-control" />
                                 </td>
                             </tr>
                             <tr>
                                 <td>Phone Number</td>
                                 <td>
-                                    <input type="number" className="form-control" value="0123456789"/>
+                                <input onChange={(e) => this.setState({phoneNumber:e.target.value})} value={this.state.phoneNumber} type="number" className="form-control"/>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Role</td>
                                 <td>
-                                    <select className="form-control">
-                                        <option>President</option>
-                                        <option>Director</option>
-                                        <option>Manager</option>
-                                        <option>Leader</option>
-                                        <option>Staff</option>
+                                    <select onChange={(e) => this.setState({role:e.target.value})} value={this.state.role} className="form-control">
+                                        <option value="1">Worker</option>
+                                        <option value="2">Supervisor</option>
+                                        <option value="3">Manager</option>
                                     </select>
                                 </td>
                             </tr>
@@ -294,7 +337,7 @@ export class EditUserModal extends Component {
                                             <button className="btn btn-secondary btn-lg btn-block">Cancel</button>
                                         </div>
                                         <div className="col-xl-3">
-                                            <button className="btn btn-success btn-lg btn-block">Edit User</button>
+                                            <button onClick={() => this.onClickEditUser()} className="btn btn-success btn-lg btn-block">Edit User</button>
                                         </div>
                                     </div>
                                 </td>
