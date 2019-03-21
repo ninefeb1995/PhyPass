@@ -30,15 +30,21 @@ export class SideBar extends Component {
                             </li>
                             <li className="nav-item">
                                 <Link to={'/report'} className="nav-link">
-                                    <i className="icon-home4"></i>
+                                    <i className="icon-statistics"></i>
                                     <span>Report</span>
                                 </Link>
                             </li>
                             <li className="nav-item nav-item-submenu">
-                                <a href="#" className="nav-link"><i className="icon-copy"></i> <span>Options</span></a>
+                                <a href="#" className="nav-link"><i className="icon-cog3"></i> <span>Options</span></a>
                                 <ul className="nav nav-group-sub" data-submenu-title="Layouts">
-                                    <li className="nav-item"><Link to={'/staff'} className="nav-link">Staff</Link></li>
-                                    <li className="nav-item"><Link to={'/category'} className="nav-link">Categories</Link></li>
+                                    <li className="nav-item"><Link to={'/staff'} className="nav-link">
+                                        <i className="icon-user-tie"></i>
+                                        <span>Staff</span>
+                                    </Link></li>
+                                    <li className="nav-item"><Link to={'/category'} className="nav-link">
+                                        <i className="icon-list-unordered"></i>
+                                        <span>Category</span>
+                                    </Link></li>
                                 </ul>
                             </li>
 

@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Modal from 'react-responsive-modal';
 import * as DashBoardService from '../../app/services/dashboard';
 
 export class Conveyor extends Component {
     displayName = Conveyor.name;
-    state = {
-        openConveyorDetailModal: false,
-        openNewInvoiceModal: false
-    }
  
     constructor(props) {
         super(props);
@@ -29,38 +24,18 @@ export class Conveyor extends Component {
         }
     }
 
-    onOpenModal(status) {
-        if(status === 1)
-        {
-            this.setState({openNewInvoiceModal: true});
-        }
-        else
-        {
-            this.setState({openConveyorDetailModal: true});
-        }
-    }
-
-    onCloseConveyorDetailModal = () => {
-        this.setState({openConveyorDetailModal: false});
-    }
-
-    onCloseNewInvoiceModal = () => {
-        this.setState({openNewInvoiceModal: false});
-    }
-
     render() {
         const { information } = this.props;
-        const { openConveyorDetailModal, openNewInvoiceModal } = this.state;
 
         return (
-            <div className="card">
-                <div className={"card-body " + this.getBgColorClassName(information.status)} onClick={this.onOpenModal.bind(this, information.status)} style={{cursor : 'pointer'}}>
+            <div className="card" style={{minWidth: "100%"}}>
+                <div className={"card-body " + this.getBgColorClassName(information.status)} data-toggle="modal" data-target="#popupModal" style={{cursor : 'pointer'}}>
                     <div className="d-flex jc-center">
                         <div className="btn rounded-round btn-xl bg-white">
                             {information.stats * 100} %
                         </div>
                     </div>
-                    <div className="card-content">
+                    <div className="card-content custom-card-content">
                         <div className="ta-center">
                             <h4 className="font-xx-large">
                                 Conveyor {information.id}
@@ -71,14 +46,35 @@ export class Conveyor extends Component {
                         </div>
                     </div>
                 </div>
-                <Modal open={openConveyorDetailModal} onClose={this.onCloseConveyorDetailModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}} >
-                    <ConveyorDetailModal baseConveyorInfo={information} />
-                </Modal>
-                <Modal open={openNewInvoiceModal} onClose={this.onCloseNewInvoiceModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}}>
-                    <NewInvoiceModal />
-                </Modal>
+
+                <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-lg" role="document">
+                        <Modal status={information.status} information = {information}/>
+                    </div>
+                </div>
             </div>
         );
+    }
+}
+
+export class Modal extends Component {
+    displayName = Modal.name;
+
+    render() {
+        const status = this.props.status;
+        const { information } = this.props;
+
+        if (status === 1)
+        {
+            return (
+                <NewInvoiceModal />
+            );
+        }
+        else {
+            return (
+                <ConveyorDetailModal baseConveyorInfo={information} />
+            );
+        }
     }
 }
 
@@ -101,63 +97,72 @@ export class ConveyorDetailModal extends Component {
         });
     }
 
+    getBgColorClassName(status) {
+        switch (status) {
+            default:
+                return '';
+            case 2:
+                return 'bg-blue-800';
+            case 4: 
+                return 'bg-orange-800';
+            case 8:
+                return 'bg-green-800';
+        }
+    }
+    
     render() {
         return (
             this.state.conveyorDetail ? 
-            <div>
-                <div className="card-header header-elements-sm-inline">
-                    <h4 className="card-title font-weight-bold">
-                        CONVEYOR {this.state.conveyorDetail.conveyor.id}
-                    </h4>
+            <div className="modal-content">
+                <div className={"modal-header "  + this.getBgColorClassName(this.state.conveyorDetail.status)}>
+                    <h4 className="modal-title" style={{paddingTop: "0.3em"}}>CONVEYOR {this.state.conveyorDetail.conveyor.id}</h4>
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
-                <div className="card-body align-items-sm-center justify-content-sm-between flex-sm-wrap">
-                    <div className="d-flex align-items-center mb-3 mb-sm-0">
-                        <div>
-                            <h4 className="card-title">
-                                STATUS:
-                            </h4>
+                <div className="modal-body">
+                    <div className="row">
+                        <div className="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-1">
+                            <h6>Status:</h6>
                         </div>
-                        <div className="ml-3">
-                            <h4 className="card-title">
-                                <span className="font-weight-semibold">{this.state.conveyorDetail.stats * 100} %</span>
-                            </h4>
+                        <div className="col-4 col-sm-2 col-md-3 col-lg-3 col-xl-2">
+                            <h6>{this.state.conveyorDetail.stats * 100}<span>%</span></h6>
+                        </div>
+                        <div className="col-5 col-sm-8 col-md-7 col-lg-7 col-xl-9">
                         </div>
                     </div>
-                    <div className="d-flex align-items-center mb-3 mb-sm-0">
-                        <div>
-                            <h4 className="card-title">
-                                INVOICE:
-                            </h4>
+                    <div className="row">
+                        <div className="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-1">
+                            <h6>Invoice:</h6>
                         </div>
-                        <div className="ml-3">
-                            <h4 className="card-title">
-                                #{this.state.conveyorDetail.code}
-                            </h4>
+                        <div className="col-4 col-sm-2 col-md-3 col-lg-3 col-xl-2">
+                            <h6><span>#</span>{this.state.conveyorDetail.code}</h6>
+                        </div>
+                        <div className="col-5 col-sm-8 col-md-7 col-lg-7 col-xl-9">
                         </div>
                     </div>
-                </div>
-                <div className="table-responsive">
-                    <table className="table text-nowrap">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Target</th>
-                                <th>In</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {this.state.conveyorDetail.details.map((value) => {
-                                return <tr key={value.skuId}>
-                                    <td>{value.skuId}</td>
-                                    <td>{value.targetQuantity}</td>
-                                    <td>{value.currentQuantity}</td>
+                    <div className="table-responsive">
+                        <table className="table table-hover table-bordered">
+                            <thead className="theme_bar theme_bar_sm theme_bar_lg">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Target</th>
+                                    <th>In</th>
                                 </tr>
-                            })}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {this.state.conveyorDetail.details.map((value) => {
+                                    return <tr key={value.skuId}>
+                                        <td>{value.skuId}</td>
+                                        <td>{value.targetQuantity}</td>
+                                        <td>{value.currentQuantity}</td>
+                                    </tr>
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
-                <ButtonField status={this.props.baseConveyorInfo.status} />
+                <ButtonField status={this.state.conveyorDetail.status} />
             </div>
             : <div></div>
         );
@@ -176,39 +181,24 @@ export class ButtonField extends Component {
         {
             default:
                 return (
-                    <div className="row">
+                    <div className="">
                         
                     </div>
                 );
             case 2:
                 return (
-                    <div className="row">
-                        <div className="col-xl-10"></div>
-                        <div className="col-xl-2">
-                            <button className="btn btn-danger btn-lg btn-block">Cancel</button>
-                        </div>
-                    </div>
+                    <button className="btn btn-danger">Cancel</button>
                 );
             case 4:
                 return (
-                    <div className="row">
-                        <div className="col-xl-8"></div>
-                        <div className="col-xl-2">
-                            <button className="btn btn-danger btn-lg btn-block">Cancel</button>
-                        </div>
-                        <div className="col-xl-2">
-                            <button className="btn btn-success btn-lg btn-block">Resume</button>
-                        </div>
+                    <div className="">
+                        <button className="btn btn-danger" style={{ margin: "0.25rem", marginLeft: 0 }}>Cancel</button>
+                        <button className="btn btn-success" style={{ margin: "0.25rem", marginRight: 0 }}>Resume</button>
                     </div>
                 );
             case 8:
                 return (
-                    <div className="row">
-                        <div className="col-xl-10"></div>
-                        <div className="col-xl-2">
-                            <button className="btn btn-success btn-lg btn-block">Finish</button>
-                        </div>
-                    </div>
+                    <button className="btn btn-success">Finish</button>
                 );
         }
     }
@@ -217,7 +207,7 @@ export class ButtonField extends Component {
         const status = this.props.status;
 
         return (
-            <div className="card-footer">
+            <div className="modal-footer">
                 {this.renderButtonField(status)}
             </div>
         );
@@ -233,112 +223,95 @@ export class NewInvoiceModal extends Component {
 
     render() {
         return (
-            <div>
-                <div className="card-header header-elements-sm-inline">
-                    <h4 className="card-title font-weight-bold">
-                        CONVEYOR 1
-                    </h4>
+            <div className="modal-content">
+                <div className="modal-header bg-dark-alpha">
+                    <h4 className="modal-title" style={{paddingTop: "0.3em"}}>CONVEYOR 5</h4>
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
-                <div className="card-body align-items-sm-center justify-content-sm-between flex-sm-wrap">
-                    <div className="d-flex align-items-center mb-3 mb-sm-0">
-                        <div>
-                            <h4 className="card-title">
-                                STATUS:
-                            </h4>
+                <div className="modal-body">
+                    <div className="form-horizontal">
+                        <div className="position-relative row">
+                            <label className="col-4 col-sm-2 col-form-label">STATUS:</label>
                         </div>
-                        <div className="ml-3">
-                            <h4 className="card-title">
-                                <span className="font-weight-semibold"></span>
-                            </h4>
+                        <div className="position-relative row">
+                            <label className="col-4 col-sm-2 col-form-label">INVOICE:</label>
+                            <div className="col-6">
+                                <input type="text" className="form-control" />
+                            </div>
                         </div>
-                    </div>
-                    <div className="d-flex align-items-center mb-3 mb-sm-0">
-                        <div>
-                            <h4 className="card-title">
-                                INVOICE:
-                            </h4>
-                        </div>
-                        <div className="ml-3">
-                            <div className="form-group">
-                                <select className="form-control" id="invoiceID">
-                                    <option>None</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                </select>
+                        <div className="position-relative form-group row">
+                            <label className="col-4 col-sm-2 col-form-label">EMPLOYEE:</label>
+                            <div className="col-6">
+                                <EmployeeSelectList />
                             </div>
                         </div>
                     </div>
-                    <div className="d-flex align-items-center mb-3 mb-sm-0">
-                        <div>
-                            <h4 className="card-title">
-                                EMPLOYEE:
-                            </h4>
-                        </div>
-                        <div className="ml-3">
-                            <div className="form-group">
-                                <select className="form-control" id="invoiceID">
-                                    <option>None</option>
-                                    <option>Nguyen Van A</option>
-                                    <option>B</option>
-                                    <option>C</option>
-                                    <option>D</option>
-                                </select>
-                            </div>
-                        </div>
+                    <div className="table-responsive">
+                        <table className="table table-hover table-bordered">
+                            <thead className="theme_bar theme_bar_sm theme_bar_lg">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Target</th>
+                                    <th>In</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr scope="row">
+                                    <td scope="col">
+                                        <CategorySelectList />
+                                    </td>
+                                    <td scope="col">
+                                        <input type="text" className="form-control" />
+                                    </td>
+                                    <td scope="col"></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div className="table-responsive">
-                    <table className="table text-nowrap">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Target</th>
-                                <th>In</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbodyID">
-                            <tr>
-                                <td>
-                                    <div className="form-group">
-                                        <select className="form-control" id="invoiceID">
-                                            <option>None</option>
-                                            <option>551</option>
-                                            <option>22</option>
-                                            <option>333</option>
-                                            <option>444</option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="form-group">
-                                        <input type="number" className="form-control" id="targetID" />
-                                    </div>
-                                </td>
-                                <td className="bg-darken-3">0</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td align="right">
-                                    <button className="btn btn-outline-dark btn-lg" onClick={this.addNewRow}>Add New</button>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div className="card-footer">
-                    <div className="row">
-                        <div className="col-xl-10"></div>
-                        <div className="col-xl-2">
-                            <button className="btn btn-success btn-lg btn-block">Done</button>
-                        </div>
+                <div className="modal-footer">
+                    <div>
+                        <button className="btn btn-outline-dark btn-sm" onClick={this.addNewRow}>Add New</button>
+                    </div>
+                    <div>
+                        <button className="btn btn-success">Done</button>
                     </div>
                 </div>
             </div>
+        );
+    }
+}
+
+export class EmployeeSelectList extends Component {
+    displayName = EmployeeSelectList.name;
+
+    render () {
+        return (
+            <select className="form-control">
+                <option>None</option>
+                <option>Nguyen Van A</option>
+                <option>B</option>
+                <option>C</option>
+                <option>D</option>
+            </select>
+        );
+    }
+}
+
+export class CategorySelectList extends Component {
+    displayName = CategorySelectList.name;
+
+    render () {
+        return (
+            <select className="form-control">
+                <option>None</option>
+                <option>551</option>
+                <option>22</option>
+                <option>333</option>
+                <option>444</option>
+            </select>
         );
     }
 }

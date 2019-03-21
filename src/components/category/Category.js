@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Modal from 'react-responsive-modal';
 import * as CategoryServices from '../../app/services/options/category';
 
 export class CategoryList extends Component {
@@ -8,7 +7,6 @@ export class CategoryList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false,
             listSkusRaw: [],
             parents: [],
             children: []
@@ -25,21 +23,12 @@ export class CategoryList extends Component {
         });
     }
 
-    onOpenModal = () => {
-        this.setState({open: true});
-    }
-
-    onCloseModal = () => {
-        this.setState({open: false});
-    }
-
     onCategoryCreated(data) {
         if (data) {
             const temp = this.state.listSkusRaw.slice();
             temp.push(data);
             this.setState({listSkusRaw: temp});
             this.handleRawData();
-            this.onCloseModal();
         }
     }
 
@@ -65,16 +54,17 @@ export class CategoryList extends Component {
     }
 
     render() {
-        const { open } = this.state;
 
         return (
             <div className="card">
                 <div className="card-header header-elements-inline">
                     <div className="header-elements">
-                    <button className="btn btn-success btn-lg btn-block" onClick={this.onOpenModal}>New Category</button>
-                    <Modal open={open} onClose={this.onCloseModal} center classNames={{overlay: "overlay-div-modal", modal: "modal-div-modal-xl", closeButton: "close-button-modal"}}>
-                        <NewCategoryFormModal listParents={this.state.parents} onCreateCategory={this.onCategoryCreated} />
-                    </Modal>
+                        <button className="btn btn-success btn-sm btn-block" data-toggle="modal" data-target="#popupModal">New Category</button>
+                        <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
+                            <div className="modal-dialog modal-sm" role="document">
+                                <NewCategoryFormModal listParents={this.state.parents} onCreateCategory={this.onCategoryCreated} />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="card-body">
@@ -101,7 +91,7 @@ export class Category extends Component {
 
         return (
             <li className="nav-item nav-item-submenu nav-item-open">
-                <a className="nav-link">{information.name}</a>
+                <a className="nav-link bg-blue">{information.name}</a>
                 <ul className="nav nav-group-sub" style={{display: "block"}}>
                     {information.children.map((item) => {
                         return <SubCategory information={item} />;
@@ -161,37 +151,37 @@ export class NewCategoryFormModal extends Component {
         const { listParents } = this.props;
 
         return (
-            <div>
-                <div className="row">
-                    <div className="col-md-1">
-                    </div> 
-                    <div className="col-md-10">
-                        <div className="form-group">
-                            <label htmlFor="subCategoryName">Name</label>
-                            <input type="text" id="subCategoryName" className="form-control" onChange={(event) => this.updateNameValue(event)} />
+            <div className="modal-content">
+                <div className="modal-header bg-blue">
+                    <h4 className="modal-title" style={{paddingTop: "0.3em"}}>NEW CATEGORY</h4>
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div> 
+                <div className="modal-body">
+                    <div className="form-horizontal">
+                        <div className="position-relative row">
+                            <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Category Name:</label>
+                            <div className="col-6">
+                                <input onChange={(event) => this.updateNameValue(event)} type="text" className="form-control" />
+                            </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="parentCategoryID">Parent Category (Optional):</label>
-                            <select className="form-control" id="parentCategoryName" onChange={(e) => this.setState({parentId: e.target.value})}>
-                                <option value="0">None</option>
-                                {listParents.map((item) => {
-                                    return <option value={item.id}>{item.name}</option>;
-                                })}                
-                            </select>
+                        <div className="position-relative form-group row">
+                            <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Parent Category (Optional):</label>
+                            <div className="col-6">
+                                <select className="form-control" id="parentCategoryName" onChange={(e) => this.setState({ parentId: e.target.value })}>
+                                    <option value="0">None</option>
+                                    {listParents.map((item) => {
+                                        return <option value={item.id}>{item.name}</option>;
+                                    })}
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-md-1">
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-9">
-                    </div>
-                    <div className="col-md-2">
-                        <button onClick={() => this.onCreateNewCategory()} className="btn btn-success btn-sm btn-block">Done</button>
-                    </div>
-                    <div className="col-md-1">
-                    </div>
-                </div>
+                <div className="modal-footer">
+                    <button onClick={() => this.onCreateNewCategory()} data-dismiss="modal" className="btn btn-success btn-sm">Done</button>
+                </div>             
             </div>
         );
     }

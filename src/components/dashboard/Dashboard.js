@@ -38,7 +38,7 @@ export class Dashboard extends Component {
         let conveyors = [];
         for (let i = 0; i < this.state.listConveyors.length; i++) {
             let item = 
-                <div key={i} className="col-lg-3">
+                <div key={i} className="col-lg-3 d-flex align-items-stretch justify-content-center">
                     <Conveyor information = {this.state.listConveyors[i]} />
                 </div>
             conveyors.push(item);
