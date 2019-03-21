@@ -21,11 +21,13 @@ export class Report extends Component {
                     <div className="table-responsive">
                         <table className="table text-hover table-bordered">
                             <thead className="bg-green">
-                                <th>Report Subject</th>
-                                <th>Visualization</th>
-                                <th>Metric</th>
-                                <th>Period</th>
-                                <th>Granularity</th>
+                                <tr>
+                                    <th>Report Subject</th>
+                                    <th>Visualization</th>
+                                    <th>Metric</th>
+                                    <th>Period</th>
+                                    <th>Granularity</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 <DataRow />

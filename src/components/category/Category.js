@@ -70,7 +70,7 @@ export class CategoryList extends Component {
                 <div className="card-body">
                     <ul className="nav nav-sidebar" data-nav-type="collapsible">
                         {this.state.parents.map((item) => {
-                            return <Category information={item} />;
+                            return <Category key={item.id} information={item} />;
                         })}
                     </ul>
                 </div>
@@ -94,7 +94,7 @@ export class Category extends Component {
                 <a className="nav-link bg-blue">{information.name}</a>
                 <ul className="nav nav-group-sub" style={{display: "block"}}>
                     {information.children.map((item) => {
-                        return <SubCategory information={item} />;
+                        return <SubCategory key={item.id} information={item} />;
                     })}
                 </ul>
             </li>
@@ -172,7 +172,7 @@ export class NewCategoryFormModal extends Component {
                                 <select className="form-control" id="parentCategoryName" onChange={(e) => this.setState({ parentId: e.target.value })}>
                                     <option value="0">None</option>
                                     {listParents.map((item) => {
-                                        return <option value={item.id}>{item.name}</option>;
+                                        return <option key={item.id} value={item.id}>{item.name}</option>;
                                     })}
                                 </select>
                             </div>

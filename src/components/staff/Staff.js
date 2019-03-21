@@ -21,7 +21,7 @@ export class StaffList extends Component {
         });
     }
 
-    userCreated(data) {    
+    userCreated(data) {
         if (data) {
             const temp = this.state.listStaff.slice();
             temp.push(data);
@@ -51,8 +51,7 @@ export class StaffList extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="d-flex align-items-center mb-3 mb-sm-0">
-                        
+                    <div className="d-flex align-items-center mb-3 mb-sm-0">                      
                     </div>
                     <div className="form-horizontal">
                         <div className="form-group form-group-feedback form-group-feedback-right">
@@ -76,7 +75,7 @@ export class StaffList extends Component {
                             </thead>
                             <tbody>
                                 {listStaff.map((item) => {
-                                    return <Staff onUserDeleted={this.onDeleteStaff} key={item.id} information={item} />
+                                    return <Staff key={item.id} onUserDeleted={this.onDeleteStaff} information={item} />
                                 })}
                             </tbody>
                         </table>
@@ -109,7 +108,11 @@ export class Staff extends Component {
     }
 
     onDeleteEmit() {
-        this.props.onUserDeleted(this.state.information.id);
+        EmployeeServices.deleteEmployeeById(this.state.information.id, (res) => {
+            if (res.data.err === 0) {
+                this.props.onUserDeleted(this.state.information.id);
+            }
+        });  
     }
 
     parseRole(id) {
@@ -146,19 +149,19 @@ export class Staff extends Component {
                     {this.parseRole(information.role)}
                 </td>
                 <td>
-                    <button className="btn bg-transparent border-success text-success rounded-round border-2 btn-icon" data-toggle="modal" data-target="#popupEditModal" title="Edit User">
+                    <button className="btn bg-transparent border-success text-success rounded-round border-2 btn-icon" data-toggle="modal" data-target={"#popupEditModal"+this.state.information.id} title="Edit User">
                         <i className="icon-pencil"></i>
                     </button>
                     <span style={{marginLeft: "2px"}}></span>
-                    <button className="btn bg-transparent border-warning-400 text-warning-400 rounded-round border-2 btn-icon" data-toggle="modal" data-target="#popupRemoveModal" title="Remove User">
+                    <button className="btn bg-transparent border-warning-400 text-warning-400 rounded-round border-2 btn-icon" data-toggle="modal" data-target={"#popupRemoveModal"+this.state.information.id} title="Remove User">
                         <i className="icon-bin"></i>
                     </button>
-                    <div className="modal fade" id="popupEditModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
+                    <div className="modal fade" id={"popupEditModal"+this.state.information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
                         <div className="modal-dialog modal-lg" role="document">
                             <EditUserModal baseData={information} onEditUser={this.onUserEdited} />
                         </div>
                     </div>
-                    <div className="modal fade" id="popupRemoveModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
+                    <div className="modal fade" id={"popupRemoveModal"+this.state.information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
                         <div className="modal-dialog modal-sm modal-notify modal-danger" role="document">
                             <RemoveUserModal onDelete={this.onDeleteEmit} />
                         </div>
@@ -208,19 +211,19 @@ export class CreateUserModal extends Component {
                         <div className="position-relative row">
                             <label className="col-4 col-sm-2 col-form-label">Staff Name:</label>
                             <div className="col-6">
-                                <input onChange={(e) => this.setState({employeeName:e.target.value})} type="text" className="form-control" />
+                                <input onChange={(e) => this.setState({employeeName:e.target.value})} value={this.state.employeeName} type="text" className="form-control" />
                             </div>
                         </div>
                         <div className="position-relative row">
                             <label className="col-4 col-sm-2 col-form-label">Phone:</label>
                             <div className="col-6">
-                                <input onChange={(e) => this.setState({phoneNumber:e.target.value})} type="text" className="form-control" />
+                                <input onChange={(e) => this.setState({phoneNumber:e.target.value})} value={this.state.phoneNumber} type="text" className="form-control" />
                             </div>
                         </div>
                         <div className="position-relative form-group row">
                             <label className="col-4 col-sm-2 col-form-label">Role:</label>
                             <div className="col-6">
-                                <select onChange={(e) => this.setState({ role: e.target.value })} className="form-control">
+                                <select onChange={(e) => this.setState({ role: e.target.value })} value={this.state.role} className="form-control">
                                     <option value="1">Worker</option>
                                     <option value="2">Supervisor</option>
                                     <option value="3">Manager</option>
@@ -231,7 +234,7 @@ export class CreateUserModal extends Component {
                 </div>
                 <div className="modal-footer">
                     <div>
-                        <button data-dismiss="modal" className="btn btn-secondary btn-sm">Cancel</button>
+                        <button onClick={() => this.setState({employeeName: '',phoneNumber: '',role: 1})} data-dismiss="modal" className="btn btn-secondary btn-sm">Cancel</button>
                     </div>
                     <div>
                         <button onClick={() => this.onClickCreateUser()} data-dismiss="modal" className="btn btn-success btn-sm">Create User</button>
@@ -327,20 +330,24 @@ export class EditUserModal extends Component {
 export class RemoveUserModal extends Component {
     displayName = RemoveUserModal.name;
 
+    constructor(props) {
+        super(props);
+    }
+
     render () {
         return (
-            <div class="modal-content text-center">
-                <div class="modal-header d-flex justify-content-center bg-danger">
-                    <h4 className="modal-title">Are you sure?</h4>
+            <div className="modal-content text-center">
+                <div className="modal-header d-flex justify-content-center bg-danger">
+                    <h4 className="modal-title">Are you sure you want to delete this employee?</h4>
                 </div>
-                <div class="modal-body">
-                    <button class="btn bg-transparent border-warning-400 text-warning-400 rounded-round border-2 btn-icon"><i class="icon-bin"></i></button>
+                <div className="modal-body">
+                    <button className="btn bg-transparent border-warning-400 text-warning-400 rounded-round border-2 btn-icon"><i className="icon-bin"></i></button>
                 </div>
-                <div class="modal-footer flex-center">
+                <div className="modal-footer flex-center">
                     <div>
                         <button onClick={() => this.props.onDelete()} data-dismiss="modal" className="btn btn-outline-danger waves-effect waves-light">Yes</button>
                     </div>
-                    <a type="button" class="btn btn-danger waves-effect" data-dismiss="modal">No</a>
+                    <a type="button" className="btn btn-danger waves-effect" data-dismiss="modal">No</a>
                 </div>
             </div>
         );
