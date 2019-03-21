@@ -26,13 +26,13 @@ export class Conveyor extends Component {
 
     render() {
         const { information } = this.props;
-
+        
         return (
             <div className="card" style={{minWidth: "100%"}}>
                 <div className={"card-body " + this.getBgColorClassName(information.status)} data-toggle="modal" data-target="#popupModal" style={{cursor : 'pointer'}}>
                     <div className="d-flex jc-center">
                         <div className="btn rounded-round btn-xl bg-white">
-                            {information.stats * 100} %
+                            {Number((information.stats * 100).toFixed(0))}%
                         </div>
                     </div>
                     <div className="card-content custom-card-content">
@@ -63,7 +63,7 @@ export class Modal extends Component {
     render() {
         const status = this.props.status;
         const { information } = this.props;
-
+        
         if (status === 1)
         {
             return (
@@ -126,7 +126,7 @@ export class ConveyorDetailModal extends Component {
                             <h6>Status:</h6>
                         </div>
                         <div className="col-4 col-sm-2 col-md-3 col-lg-3 col-xl-2">
-                            <h6>{this.state.conveyorDetail.stats * 100}<span>%</span></h6>
+                            <h6 className="font-weight-semibold">{Number((this.state.conveyorDetail.stats * 100).toFixed(0))}%</h6>
                         </div>
                         <div className="col-5 col-sm-8 col-md-7 col-lg-7 col-xl-9">
                         </div>
@@ -187,18 +187,18 @@ export class ButtonField extends Component {
                 );
             case 2:
                 return (
-                    <button className="btn btn-danger">Cancel</button>
+                    <button className="btn btn-danger" data-dismiss="modal">Cancel</button>
                 );
             case 4:
                 return (
                     <div className="">
-                        <button className="btn btn-danger" style={{ margin: "0.25rem", marginLeft: 0 }}>Cancel</button>
-                        <button className="btn btn-success" style={{ margin: "0.25rem", marginRight: 0 }}>Resume</button>
+                        <button className="btn btn-danger" data-dismiss="modal" style={{ margin: "0.25rem", marginLeft: 0 }}>Cancel</button>
+                        <button className="btn btn-success" data-dismiss="modal" style={{ margin: "0.25rem", marginRight: 0 }}>Resume</button>
                     </div>
                 );
             case 8:
                 return (
-                    <button className="btn btn-success">Finish</button>
+                    <button className="btn btn-success" data-dismiss="modal">Finish</button>
                 );
         }
     }
