@@ -57,7 +57,7 @@ export class Conveyor extends Component {
                 <div className={"card-body " + this.getBgColorClassName(information.status)} onClick={this.onOpenModal.bind(this, information.status)} style={{cursor : 'pointer'}}>
                     <div className="d-flex jc-center">
                         <div className="btn rounded-round btn-xl bg-white">
-                            {information.stats * 100} %
+                            {Number((information.stats * 100).toFixed(0))}%
                         </div>
                     </div>
                     <div className="card-content">
@@ -119,7 +119,7 @@ export class ConveyorDetailModal extends Component {
                         </div>
                         <div className="ml-3">
                             <h4 className="card-title">
-                                <span className="font-weight-semibold">{this.state.conveyorDetail.stats * 100} %</span>
+                                <span className="font-weight-semibold">{Number((this.state.conveyorDetail.stats * 100).toFixed(0))}%</span>
                             </h4>
                         </div>
                     </div>
@@ -156,7 +156,6 @@ export class ConveyorDetailModal extends Component {
                         </tbody>
                     </table>
                 </div>
-
                 <ButtonField status={this.props.baseConveyorInfo.status} />
             </div>
             : <div></div>
