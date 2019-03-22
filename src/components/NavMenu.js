@@ -47,16 +47,16 @@ export class NavMenu extends Component {
                     </ul>
                 </div>
 
-                <div class="collapse navbar-collapse justify-content-end" id="navbar-mobile">
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown dropdown-user">
-                            <a href="#" class="navbar-nav-link d-flex align-items-center dropdown-toggle" data-toggle="dropdown">
-                                <img src="global_assets/images/placeholders/placeholder.jpg" class="rounded-circle mr-2" height="34" alt="" />
+                <div className="collapse navbar-collapse justify-content-end" id="navbar-mobile">
+                    <ul className="navbar-nav">
+                        <li className="nav-item dropdown dropdown-user">
+                            <a href="#" className="navbar-nav-link d-flex align-items-center dropdown-toggle" data-toggle="dropdown">
+                                <img src="global_assets/images/placeholders/placeholder.jpg" className="rounded-circle mr-2" height="34" alt="" />
                                 <span>User Name</span>
                             </a>
 
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a href="#" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>
+                            <div className="dropdown-menu dropdown-menu-right">
+                                <a href="#" className="dropdown-item"><i className="icon-switch2"></i> Logout</a>
                             </div>
                         </li>
                     </ul>
