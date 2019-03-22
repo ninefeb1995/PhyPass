@@ -59,7 +59,7 @@ export class CategoryList extends Component {
             <div className="card">
                 <div className="card-header header-elements-inline">
                     <div className="header-elements">
-                        <button className="btn btn-success btn-sm btn-block" data-toggle="modal" data-target="#popupModal">New Category</button>
+                        <button className="btn btn-success btn-sm" data-toggle="modal" data-target="#popupModal">New Category</button>
                         <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
                             <div className="modal-dialog modal-sm" role="document">
                                 <NewCategoryFormModal listParents={this.state.parents} onCreateCategory={this.onCategoryCreated} />
@@ -86,13 +86,21 @@ export class Category extends Component {
         super(props);
     }
 
+    state = {
+        toggle: false
+    }
+
+    toggle = () => {
+        this.state.toggle? this.setState({toggle: false}) : this.setState({toggle: true});
+    }
+
     render() {
         const { information } = this.props;
 
         return (
-            <li className="nav-item nav-item-submenu nav-item-open">
-                <a className="nav-link bg-blue">{information.name}</a>
-                <ul className="nav nav-group-sub" style={{display: "block"}}>
+            <li className={this.state.toggle? "nav-item nav-item-submenu nav-item-open" : "nav-item nav-item-submenu"}>
+                <a onClick={this.toggle} style={{cursor: "pointer"}} className="nav-link bg-blue">{information.name}</a>
+                <ul className="nav nav-group-sub" style={{display: this.state.toggle? "block" : ""}}>
                     {information.children.map((item) => {
                         return <SubCategory key={item.id} information={item} />;
                     })}

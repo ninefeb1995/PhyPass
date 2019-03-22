@@ -9,7 +9,7 @@ export class Report extends Component {
             <div className="card">
                 <div className="card-header header-elements-inline">
                     <div className="header-elements-inline">
-                        <button className="btn btn-success btn-sm btn-block" data-toggle="modal" data-target="#popupModal">New Report Template</button>
+                        <button className="btn btn-success btn-sm" data-toggle="modal" data-target="#popupModal">New Report Template</button>
                         <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
                             <div className="modal-dialog modal-lg" role="document">
                                 <Modal />
@@ -72,7 +72,7 @@ export class NewReportTemplateModal extends Component {
     render() {
         return (
             <div className="modal-content">
-                <div className="modal-header">
+                <div className="modal-header bg-blue">
                     <h4 className="modal-title" style={{paddingTop: "0.3em"}}>REPORT TEMPLATE</h4>
                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -81,17 +81,17 @@ export class NewReportTemplateModal extends Component {
                 <div className="modal-body">
                     <div className="form-horizontal">
                         <div className="position-relative row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <input type="text" className="form-control" defaultValue="Sale Invoice" />
                             </div>
                         </div>
                         <div className="position-relative row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <input type="text" className="form-control" defaultValue="Type" />
                             </div>
                         </div>
                         <div className="position-relative form-group row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <input type="text" className="form-control" defaultValue="Store" />
                             </div>
                         </div>
@@ -102,7 +102,7 @@ export class NewReportTemplateModal extends Component {
                             <div className="card-body">
                                 <div className="form-horizontal">
                                     <div className="position-relative row">
-                                        <div className="col-6">
+                                        <div className="col-12">
                                             <select className="form-control">
                                                 <option>Yearly</option>
                                                 <option>Monthly</option>
@@ -113,7 +113,7 @@ export class NewReportTemplateModal extends Component {
                                         </div>
                                     </div>
                                     <div className="position-relative row">
-                                        <div className="col-6">
+                                        <div className="col-12">
                                             <select className="form-control">
                                                 <option>Yearly</option>
                                                 <option>Monthly</option>
@@ -135,12 +135,12 @@ export class NewReportTemplateModal extends Component {
                             </div>
                         </div>
                         <div className="position-relative row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <input type="text" className="form-control" defaultValue="Metrics" />
                             </div>
                         </div>
-                        <div className="position-relative row">
-                            <div className="col-6">
+                        <div className="position-relative form-group row">
+                            <div className="col-12">
                                 <input type="text" className="form-control" defaultValue="Visualization" />
                             </div>
                         </div>

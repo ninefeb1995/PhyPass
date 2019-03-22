@@ -44,9 +44,9 @@ export class StaffList extends Component {
                 </div>
                 <div className="card-body d-sm-flex align-items-sm-center justify-content-sm-between flex-sm-wrap">
                     <div className="d-flex align-items-center mb-3 mb-sm-0">
-                        <button className="btn btn-success btn-sm btn-block" data-toggle="modal" data-target="#popupModal">Create</button>
+                        <button className="btn btn-success btn-sm" data-toggle="modal" data-target="#popupModal">Create</button>
                         <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
-                            <div className="modal-dialog modal-lg" role="document">
+                            <div className="modal-dialog modal-sm" role="document">
                                 <CreateUserModal onCreateUser={this.userCreated}/>
                             </div>
                         </div>
@@ -157,7 +157,7 @@ export class Staff extends Component {
                         <i className="icon-bin"></i>
                     </button>
                     <div className="modal fade" id={"popupEditModal"+this.state.information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
-                        <div className="modal-dialog modal-lg" role="document">
+                        <div className="modal-dialog modal-sm" role="document">
                             <EditUserModal baseData={information} onEditUser={this.onUserEdited} />
                         </div>
                     </div>
@@ -200,7 +200,7 @@ export class CreateUserModal extends Component {
     render() {
         return (
             <div className="modal-content">
-                <div className="modal-header">
+                <div className="modal-header bg-green">
                     <h4 className="modal-title" style={{paddingTop: "0.3em"}}>CREATE STAFF</h4>
                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
@@ -209,20 +209,20 @@ export class CreateUserModal extends Component {
                 <div className="modal-body">
                     <div className="form-horizontal">
                         <div className="position-relative row">
-                            <label className="col-4 col-sm-2 col-form-label">Staff Name:</label>
-                            <div className="col-6">
+                            <label className="col-4 col-sm-4 col-md co-lg col-xl col-form-label">Staff Name:</label>
+                            <div className="col-8">
                                 <input onChange={(e) => this.setState({employeeName:e.target.value})} value={this.state.employeeName} type="text" className="form-control" />
                             </div>
                         </div>
                         <div className="position-relative row">
-                            <label className="col-4 col-sm-2 col-form-label">Phone:</label>
-                            <div className="col-6">
-                                <input onChange={(e) => this.setState({phoneNumber:e.target.value})} value={this.state.phoneNumber} type="text" className="form-control" />
+                            <label className="col-4 col-sm-4 col-md co-lg col-xl col-form-label">Phone:</label>
+                            <div className="col-8">
+                                <input onChange={(e) => this.setState({phoneNumber:e.target.value})} value={this.state.phoneNumber} type="number" className="form-control" />
                             </div>
                         </div>
                         <div className="position-relative form-group row">
-                            <label className="col-4 col-sm-2 col-form-label">Role:</label>
-                            <div className="col-6">
+                            <label className="col-4 col-sm-4 col-md co-lg col-xl col-form-label">Role:</label>
+                            <div className="col-8">
                                 <select onChange={(e) => this.setState({ role: e.target.value })} value={this.state.role} className="form-control">
                                     <option value="1">Worker</option>
                                     <option value="2">Supervisor</option>
@@ -282,8 +282,8 @@ export class EditUserModal extends Component {
     render() {
         return (
             <div className="modal-content">
-                <div className="modal-header">
-                    <h4 className="modal-title" style={{paddingTop: "0.3em"}}>Edit Staff</h4>
+                <div className="modal-header bg-green-800">
+                    <h4 className="modal-title" style={{paddingTop: "0.3em"}}>EDIT STAFF</h4>
                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -291,20 +291,20 @@ export class EditUserModal extends Component {
                 <div className="modal-body">
                     <div className="form-horizontal">
                         <div className="position-relative row">
-                            <label className="col-4 col-sm-2 col-form-label">Staff Name:</label>
-                            <div className="col-6">
+                            <label className="col-4 col-sm-4 col-md co-lg col-xl col-form-label">Staff Name:</label>
+                            <div className="col-8">
                                 <input onChange={(e) => this.setState({employeeName:e.target.value})} value={this.state.employeeName} type="text" className="form-control" />
                             </div>
                         </div>
                         <div className="position-relative row">
-                            <label className="col-4 col-sm-2 col-form-label">Phone:</label>
-                            <div className="col-6">
-                                <input onChange={(e) => this.setState({phoneNumber:e.target.value})} value={this.state.phoneNumber} type="text" className="form-control" />
+                            <label className="col-4 col-sm-4 col-md co-lg col-xl col-form-label">Phone:</label>
+                            <div className="col-8">
+                                <input onChange={(e) => this.setState({phoneNumber:e.target.value})} value={this.state.phoneNumber} type="number" className="form-control" />
                             </div>
                         </div>
                         <div className="position-relative form-group row">
-                            <label className="col-4 col-sm-2 col-form-label">Role:</label>
-                            <div className="col-6">
+                            <label className="col-4 col-sm-4 col-md co-lg col-xl col-form-label">Role:</label>
+                            <div className="col-8">
                                 <select onChange={(e) => this.setState({ role: e.target.value })} className="form-control">
                                     <option value="1">Worker</option>
                                     <option value="2">Supervisor</option>
@@ -347,7 +347,7 @@ export class RemoveUserModal extends Component {
                     <div>
                         <button onClick={() => this.props.onDelete()} data-dismiss="modal" className="btn btn-outline-danger waves-effect waves-light">Yes</button>
                     </div>
-                    <a type="button" className="btn btn-danger waves-effect" data-dismiss="modal">No</a>
+                    <button className="btn btn-danger waves-effect" data-dismiss="modal">No</button>
                 </div>
             </div>
         );
