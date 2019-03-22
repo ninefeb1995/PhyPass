@@ -5,6 +5,7 @@ import { Dashboard } from './components/dashboard/Dashboard';
 import { Report } from './components/report/Report';
 import { StaffList } from './components/staff/Staff';
 import { CategoryList } from './components/category/Category';
+import { Login } from './components/login/Login';
 
 export default class App extends Component {
   displayName = App.name;
@@ -13,6 +14,7 @@ export default class App extends Component {
     return (
       <Layout>
         <Route exact path='/' component={Dashboard} />
+        <Route exact path="/login" component={Login} />
         <Route exact path='/report' component={Report} />
         <Route exact path='/staff' component={StaffList} />
         <Route exact path='/category' component={CategoryList} />
