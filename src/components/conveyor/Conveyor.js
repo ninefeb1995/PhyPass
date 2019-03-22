@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as DashBoardService from '../../app/services/dashboard';
+import * as EmployeeService from '../../app/services/options/employee';
+import * as CategoryService from '../../app/services/options/category';
 
 export class Conveyor extends Component {
     displayName = Conveyor.name;
@@ -29,7 +31,7 @@ export class Conveyor extends Component {
         
         return (
             <div className="card" style={{minWidth: "100%"}}>
-                <div className={"card-body " + this.getBgColorClassName(information.status)} data-toggle="modal" data-target="#popupModal" style={{cursor : 'pointer'}}>
+                <div className={"card-body " + this.getBgColorClassName(information.status)} data-toggle="modal" data-target={"#popupModal"+information.id} style={{cursor : 'pointer'}}>
                     <div className="d-flex jc-center">
                         <div className="btn rounded-round btn-xl bg-white">
                             {Number((information.stats * 100).toFixed(0))}%
@@ -47,9 +49,9 @@ export class Conveyor extends Component {
                     </div>
                 </div>
 
-                <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
+                <div className="modal fade" id={"popupModal"+information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
                     <div className="modal-dialog modal-lg" role="document">
-                        <Modal status={information.status} information = {information}/>
+                        <Modal information = {information}/>
                     </div>
                 </div>
             </div>
@@ -61,13 +63,12 @@ export class Modal extends Component {
     displayName = Modal.name;
 
     render() {
-        const status = this.props.status;
         const { information } = this.props;
-        
-        if (status === 1)
+
+        if (information.status === 1)
         {
             return (
-                <NewInvoiceModal />
+                <NewInvoiceModal baseConveyorInfo={information} />
             );
         }
         else {
@@ -90,9 +91,10 @@ export class ConveyorDetailModal extends Component {
 
     componentDidMount() {
         const { baseConveyorInfo } = this.props;
-        DashBoardService.getInvoiceDetail(baseConveyorInfo.id, (data) => {
-            if (data.data.err === 0) {         
-                this.setState({conveyorDetail: data.data.data});
+
+        DashBoardService.getInvoiceDetail(baseConveyorInfo.invoiceCode, (res) => {
+            if (res.data.err === 0) {         
+                this.setState({conveyorDetail: res.data.data});
             }
         });
     }
@@ -217,15 +219,62 @@ export class ButtonField extends Component {
 export class NewInvoiceModal extends Component {
     displayName = NewInvoiceModal.name;
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            listEmployee: [],
+            listSkusRaw: [],
+            parents: [],
+            children: []
+        };
+    }
+
+    componentDidMount() {
+        EmployeeService.getListEmployee(1, 50, (res) => {
+            if (res.data.err === 0) {
+                this.setState({listEmployee: res.data.data});
+            }
+        });
+        CategoryService.getListSku(1, 50, (res) => {
+            if (res.data.err === 0) {
+                this.setState({listSkusRaw: res.data.data});
+                this.handleRawData();
+            }
+        });
+    }
+
+    handleRawData() {
+        if(this.state.listSkusRaw) {
+            let parents = this.state.listSkusRaw.filter((item) => item.parentId === 0);
+            let children = this.state.listSkusRaw.filter((item) => item.parentId !== 0);
+            parents.forEach((item) => item.children = []);
+            children.forEach((child) => {
+                let parentAt = 0;
+                if (parents.some((parent, index) => {
+                    let testResult = parent.id === child.parentId;
+                    if (testResult) {
+                        parentAt = index;
+                    }
+                    return testResult;
+                })) {
+                    parents[parentAt].children.push(child);
+                }
+            });
+            this.setState({parents, children});
+        }
+    }
+
     addNewRow = () => {
         
     }
 
     render() {
+        const { baseConveyorInfo } = this.props;
+
         return (
             <div className="modal-content">
                 <div className="modal-header bg-dark-alpha">
-                    <h4 className="modal-title" style={{paddingTop: "0.3em"}}>CONVEYOR 5</h4>
+                    <h4 className="modal-title" style={{paddingTop: "0.3em"}}>CONVEYOR {baseConveyorInfo.id}</h4>
                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -244,7 +293,7 @@ export class NewInvoiceModal extends Component {
                         <div className="position-relative form-group row">
                             <label className="col-4 col-sm-2 col-form-label">EMPLOYEE:</label>
                             <div className="col-6">
-                                <EmployeeSelectList />
+                                <EmployeeSelectList listEmployee={this.state.listEmployee} />
                             </div>
                         </div>
                     </div>
@@ -260,7 +309,7 @@ export class NewInvoiceModal extends Component {
                             <tbody>
                                 <tr scope="row">
                                     <td scope="col">
-                                        <CategorySelectList />
+                                        <CategorySelectList listCategories={this.state.parents} />
                                     </td>
                                     <td scope="col">
                                         <input type="text" className="form-control" />
@@ -287,14 +336,19 @@ export class NewInvoiceModal extends Component {
 export class EmployeeSelectList extends Component {
     displayName = EmployeeSelectList.name;
 
+    constructor(props) {
+        super(props);
+    }
+
     render () {
+        let { listEmployee } = this.props;
+
         return (
             <select className="form-control">
-                <option>None</option>
-                <option>Nguyen Van A</option>
-                <option>B</option>
-                <option>C</option>
-                <option>D</option>
+                <option key="0" value="0">None</option>
+                {listEmployee.map((item) => {
+                    return <option key={item.id} value={item.id}>{item.name}</option>;
+                })}
             </select>
         );
     }
@@ -303,14 +357,18 @@ export class EmployeeSelectList extends Component {
 export class CategorySelectList extends Component {
     displayName = CategorySelectList.name;
 
+    constructor(props) {
+        super(props);
+    }
+
     render () {
+        let { listCategories } = this.props;
         return (
             <select className="form-control">
-                <option>None</option>
-                <option>551</option>
-                <option>22</option>
-                <option>333</option>
-                <option>444</option>
+                <option key="0" value="0">None</option>
+                {listCategories.map((item) => {
+                    return <option key={item.id} value={item.id}>{item.name}</option>;
+                })}
             </select>
         );
     }

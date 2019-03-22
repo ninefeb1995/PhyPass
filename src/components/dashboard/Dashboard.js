@@ -47,6 +47,7 @@ export class Dashboard extends Component {
     }
 
     render() {
+
         return (
             <div className="row">
                 {this.renderConveyor()}

@@ -178,7 +178,7 @@ export class NewCategoryFormModal extends Component {
                             <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Parent Category (Optional):</label>
                             <div className="col-6">
                                 <select className="form-control" id="parentCategoryName" onChange={(e) => this.setState({ parentId: e.target.value })}>
-                                    <option value="0">None</option>
+                                    <option key="0" value="0">None</option>
                                     {listParents.map((item) => {
                                         return <option key={item.id} value={item.id}>{item.name}</option>;
                                     })}

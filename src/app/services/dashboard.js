@@ -1,34 +1,31 @@
 import axios from 'axios';
 import * as Config from '../config';
 
-export const getListOfConveyor = (pageNumber = 1, pageSize = 50, callback) => {
-    axios.get(Config.getPath('conveyor/getlist'), {
+export const getListOfConveyor = async (pageNumber = 1, pageSize = 50, callback) => {
+    let res = await axios.get(Config.getPath('conveyor/getlist'), {
         params: {
             p: pageNumber,
             c: pageSize
         }
-    })
-    .then((res) => callback(res))
-    .catch((err) => callback(err));
+    });
+    callback(res);
 };
 
-export const getInvoiceDetail = (invoiceCode, callback) => {
-    axios.get(Config.getPath('invoice/get'), {
+export const getInvoiceDetail = async (invoiceCode, callback) => {
+    let res = await axios.get(Config.getPath('invoice/get'), {
         params: {
             code: invoiceCode
         }
-    })
-    .then((res) => callback(res))
-    .catch((err) => callback(err));
+    });
+    callback(res);
 };
 
-export const updateInvoiceDetail = (invoiceCode, counterData, callback) => {
-    axios.put(Config.getPath('invoice/detail/update_quantity'), counterData, {
+export const updateInvoiceDetail = async (invoiceCode, counterData, callback) => {
+    let res = await axios.get(Config.getPath('invoice/detail/update_quantity'), {
         params: {
-            invoice_code: invoiceCode
+            invoice_code: invoiceCode,
+            counterData: counterData
         }
-    })
-    .then((res) => callback(res))
-    .catch((err) => callback(err));
-
+    });
+    callback(res);
 };
