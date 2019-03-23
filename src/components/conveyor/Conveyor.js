@@ -172,7 +172,7 @@ export class ConveyorDetailModal extends Component {
                             <h6>TRUCK NUMBER:</h6>
                         </div>
                         <div className="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2">
-                            <h6>59C1-8888</h6>
+                            <h6>{this.state.conveyorDetail.truckNumber}</h6>
                         </div>
                         <div className="col-4 col-sm-6 col-md-6 col-lg-6 col-xl-8">
                         </div>
