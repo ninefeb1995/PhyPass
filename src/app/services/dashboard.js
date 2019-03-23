@@ -30,19 +30,6 @@ export const updateQuantityInvoiceDetail = async (invoiceCode, counterData, call
     callback(res);
 };
 
-export const createNewConveyorDetail = async (data, callback) => {
-    let res = await axios.get(Config.getPath('invoice/add'), {
-        params: {
-            code: data.code,
-            conveyor_id: data.conveyor_id,
-            staff_id: data.staff_id,
-            truck_number: data.truck_number,
-            status: 1
-        }
-    });
-    callback(res);
-};
-
 export const updateConveyorDetail = async (data, callback) => {
     let res = await axios.get(Config.getPath('invoice/edit'), {
         params: {
@@ -51,6 +38,19 @@ export const updateConveyorDetail = async (data, callback) => {
             staff_id: data.staff_id,
             truck_number: data.truck_number,
             status: data.status
+        }
+    });
+    callback(res);
+};
+
+export const createNewConveyorDetail = async (data, callback) => {
+    let res = await axios.get(Config.getPath('invoice/add'), {
+        params: {
+            code: data.code,
+            conveyor_id: data.conveyor_id,
+            staff_id: data.staff_id,
+            truck_number: data.truck_number,
+            status: 1
         }
     });
     callback(res);

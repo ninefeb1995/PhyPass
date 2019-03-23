@@ -264,8 +264,14 @@ export class NewInvoiceModal extends Component {
             parents: [],
             children: [],
             listSkuHandled: [],
-            tableRow: []
+            tableRow: [],
+            invoiceCode: '',
+            staffId: 0,
+            truckNumber: 0,
+            invoiceDetailData: []
         };
+        this.onEmployeeSelected = this.onEmployeeSelected.bind(this);
+        this.onSkuSelected = this.onSkuSelected.bind(this);
     }
 
     componentDidMount() {
@@ -284,8 +290,17 @@ export class NewInvoiceModal extends Component {
 
     addNewRow() {
         let listRowTemp = this.state.tableRow;
-        listRowTemp.push(this.rowTemplate(this.state.listSkuHandled));
-        this.setState({tableRow: listRowTemp});
+        let listRowData = this.state.invoiceDetailData;
+        listRowTemp.push(this.rowTemplate(this.state.listSkuHandled, listRowTemp.length));
+        listRowData.push({
+            invoice_code: '',
+            sku_id: 0,
+            target: 0
+        });
+        this.setState({
+            tableRow: listRowTemp,
+            invoiceDetailData: listRowData
+        });
     }
 
     handleRawData() {
@@ -311,16 +326,57 @@ export class NewInvoiceModal extends Component {
         }
     }
 
-    rowTemplate(listSku) {
+    rowTemplate(listSku, index) {
         return <tr scope="row">
             <td scope="col">
-                <CategorySelectList listCategories={listSku} />
+                <CategorySelectList onChange={this.onSkuSelected} index={index} listCategories={listSku} />
             </td>
             <td scope="col">
-                <input type="text" className="form-control" />
+                <input onChange={(e) => this.onTargetSet(e.target.value, index)} type="number" className="form-control" />
             </td>
             <td scope="col"></td>
         </tr>;
+    }
+
+    onEmployeeSelected(value) {
+        this.setState({staffId: Number.parseInt(value)});
+    }
+
+    onSkuSelected(value, index) {
+        let listRowData = this.state.invoiceDetailData;
+        listRowData.forEach((item, itemIndex) => {
+            if (itemIndex === index) {
+                item.sku_id = Number.parseInt(value);
+            }
+        });
+        this.setState({invoiceDetailData: listRowData});
+    }
+
+    onTargetSet(value, index) {
+        let listRowData = this.state.invoiceDetailData;
+        listRowData.forEach((item, itemIndex) => {
+            if (itemIndex === index) {
+                item.target = Number.parseInt(value);
+            }
+        });
+        this.setState({invoiceDetailData: listRowData});
+    }
+
+    onStart() {
+        let invoiceData = {
+            code: this.state.invoiceCode,
+            conveyor_id: this.props.information.id,
+            staff_id: this.state.staffId,
+            truck_number: this.state.truckNumber,
+            status: 2
+        };
+        DashBoardService.createNewConveyorDetail(invoiceData, (res) => {
+            if (res.data.err === 0) {
+                let invoice_code = res.data.data.code; // double check
+                
+            }
+        });
+
     }
 
     render() {
@@ -342,19 +398,19 @@ export class NewInvoiceModal extends Component {
                         <div className="position-relative row">
                             <label className="col-4 col-form-label">INVOICE:</label>
                             <div className="col-6">
-                                <input type="text" className="form-control" />
+                                <input onChange={(e) => this.setState({invoiceCode: e.target.value})} type="text" className="form-control" />
                             </div>
                         </div>
                         <div className="position-relative row">
                             <label className="col-4 col-form-label">EMPLOYEE:</label>
                             <div className="col-6">
-                                <EmployeeSelectList listEmployee={this.state.listEmployee} />
+                                <EmployeeSelectList onChange={this.onEmployeeSelected} listEmployee={this.state.listEmployee} />
                             </div>
                         </div>
                         <div className="position-relative form-group row">
                             <label className="col-4 col-form-label">TRUCK NUMBER:</label>
                             <div className="col-6">
-                                <input type="text" className="form-control" />
+                                <input onChange={(e) => this.setState({truckNumber: e.target.value})} type="text" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -382,7 +438,7 @@ export class NewInvoiceModal extends Component {
                 </div>
                 <div className="modal-footer">
                     <div>
-                        <button className="btn btn-success btn-sm" style={{width:"10rem"}}>Create</button>
+                        <button className="btn btn-success btn-sm" data-dismiss="modal" onClick={() => this.onStart()} style={{width:"10rem"}}>Done</button>
                     </div>
                 </div>
             </div>
@@ -397,11 +453,15 @@ export class EmployeeSelectList extends Component {
         super(props);
     }
 
+    onSelectEmployee(value) {
+        this.props.onChange(value);
+    }
+
     render () {
         let { listEmployee } = this.props;
 
         return (
-            <select className="form-control">
+            <select onChange={(e) => this.onSelectEmployee(e.target.value)} className="form-control">
                 <option key="0" value="0">None</option>
                 {listEmployee.map((item) => {
                     return <option key={item.id} value={item.id}>{item.name}</option>;
@@ -418,10 +478,14 @@ export class CategorySelectList extends Component {
         super(props);
     }
 
+    onSelectSku(value) {
+        this.props.onChange(value, this.props.index);
+    }
+
     render () {
         let { listCategories } = this.props;
         return (
-            <select className="form-control">
+            <select onChange={(e) => this.onSelectSku(e.target.value)} className="form-control">
                 <option key="0" value="0">None</option>
                 {listCategories.map((item) => {
                     return <option key={item.id} value={item.id}>{item.name}</option>;
