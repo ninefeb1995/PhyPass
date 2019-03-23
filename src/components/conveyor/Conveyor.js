@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import * as DashBoardService from '../../app/services/dashboard';
 import * as EmployeeService from '../../app/services/options/employee';
 import * as CategoryService from '../../app/services/options/category';
+import BtnNumber from '../../app/constants/constants';
 
 export class Conveyor extends Component {
     displayName = Conveyor.name;
@@ -87,14 +88,37 @@ export class ConveyorDetailModal extends Component {
         this.state = {
             conveyorDetail: null
         };
+        this.handleClickBtn = this.handleClickBtn.bind(this);
     }
 
     componentDidMount() {
         const { baseConveyorInfo } = this.props;
-
         DashBoardService.getInvoiceDetail(baseConveyorInfo.invoiceCode, (res) => {
-            if (res.data.err === 0) {         
-                this.setState({conveyorDetail: res.data.data});
+            if (res.data.err === 0) {
+                this.setState({
+                    conveyorDetail: res.data.data
+                });
+            }
+        });
+    }
+
+    handleClickBtn(id) {
+        let status = 0;
+        if (id in [BtnNumber.CANCEL, BtnNumber.FINISH]) {
+            status = 0;
+        } else if (id in [BtnNumber.RESUME]) {
+            status = 2;
+        }
+        let data = {
+            code: this.state.conveyorDetail.code,
+            conveyor_id: this.state.conveyorDetail.conveyor.id,
+            staff_id: this.state.conveyorDetail.staff.id,
+            truck_number: this.state.conveyorDetail.truck_number,
+            status
+        };
+        DashBoardService.updateConveyorDetail(data, (res) => {
+            if (res.data.err === 0) {
+                
             }
         });
     }
@@ -164,7 +188,7 @@ export class ConveyorDetailModal extends Component {
                         </table>
                     </div>
                 </div>
-                <ButtonField status={this.state.conveyorDetail.status} />
+                <ButtonField status={this.state.conveyorDetail.status} onClick={this.handleClickBtn} />
             </div>
             : <div></div>
         );
@@ -178,6 +202,10 @@ export class ButtonField extends Component {
         super(props);
     }
 
+    onClickBtn(id) {
+        this.props.onClick(id);
+    }
+
     renderButtonField(status) {
         switch (status)
         {
@@ -189,18 +217,18 @@ export class ButtonField extends Component {
                 );
             case 2:
                 return (
-                    <button className="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    <button onClick={() => this.onClickBtn(BtnNumber.CANCEL)} className="btn btn-danger" data-dismiss="modal">Cancel</button>
                 );
             case 4:
                 return (
                     <div className="">
-                        <button className="btn btn-danger" data-dismiss="modal" style={{ margin: "0.25rem", marginLeft: 0 }}>Cancel</button>
-                        <button className="btn btn-success" data-dismiss="modal" style={{ margin: "0.25rem", marginRight: 0 }}>Resume</button>
+                        <button onClick={() => this.onClickBtn(BtnNumber.CANCEL)} className="btn btn-danger" data-dismiss="modal" style={{ margin: "0.25rem", marginLeft: 0 }}>Cancel</button>
+                        <button onClick={() => this.onClickBtn(BtnNumber.RESUME)} className="btn btn-success" data-dismiss="modal" style={{ margin: "0.25rem", marginRight: 0 }}>Resume</button>
                     </div>
                 );
             case 8:
                 return (
-                    <button className="btn btn-success" data-dismiss="modal">Finish</button>
+                    <button onClick={() => this.onClickBtn(BtnNumber.FINISH)} className="btn btn-success" data-dismiss="modal">Finish</button>
                 );
         }
     }
@@ -225,7 +253,8 @@ export class NewInvoiceModal extends Component {
             listEmployee: [],
             listSkusRaw: [],
             parents: [],
-            children: []
+            children: [],
+            listSkuHandled: []
         };
     }
 
@@ -260,7 +289,8 @@ export class NewInvoiceModal extends Component {
                     parents[parentAt].children.push(child);
                 }
             });
-            this.setState({parents, children});
+            let listSkuHandled = parents.concat(...children);
+            this.setState({parents, children, listSkuHandled});
         }
     }
 
@@ -309,7 +339,7 @@ export class NewInvoiceModal extends Component {
                             <tbody>
                                 <tr scope="row">
                                     <td scope="col">
-                                        <CategorySelectList listCategories={this.state.parents} />
+                                        <CategorySelectList listCategories={this.state.listSkuHandled} />
                                     </td>
                                     <td scope="col">
                                         <input type="text" className="form-control" />
@@ -325,7 +355,7 @@ export class NewInvoiceModal extends Component {
                         <button className="btn btn-outline-dark btn-sm" onClick={this.addNewRow}>Add New</button>
                     </div>
                     <div>
-                        <button className="btn btn-success">Done</button>
+                        <button className="btn btn-success">Create</button>
                     </div>
                 </div>
             </div>
