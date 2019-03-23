@@ -43,9 +43,9 @@ export class Conveyor extends Component {
                             <h4 className="font-xx-large">
                                 Conveyor {information.id}
                             </h4>
-                            <Link to={'/staff/details'} className="font-small">
+                            <p className="font-small">
                                 {information.staff ? information.staff.name : ''}
-                            </Link>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -148,23 +148,33 @@ export class ConveyorDetailModal extends Component {
                 </div>
                 <div className="modal-body">
                     <div className="row">
-                        <div className="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-1">
-                            <h6>Status:</h6>
+                        <div className="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2">
+                            <h6>STATUS:</h6>
                         </div>
-                        <div className="col-4 col-sm-2 col-md-3 col-lg-3 col-xl-2">
+                        <div className="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2">
                             <h6 className="font-weight-semibold">{Number((this.state.conveyorDetail.stats * 100).toFixed(0))}%</h6>
                         </div>
-                        <div className="col-5 col-sm-8 col-md-7 col-lg-7 col-xl-9">
+                        <div className="col-4 col-sm-6 col-md-6 col-lg-6 col-xl-8">
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-3 col-sm-2 col-md-2 col-lg-2 col-xl-1">
-                            <h6>Invoice:</h6>
+                        <div className="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2">
+                            <h6>INVOICE:</h6>
                         </div>
-                        <div className="col-4 col-sm-2 col-md-3 col-lg-3 col-xl-2">
+                        <div className="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2">
                             <h6><span>#</span>{this.state.conveyorDetail.code}</h6>
                         </div>
-                        <div className="col-5 col-sm-8 col-md-7 col-lg-7 col-xl-9">
+                        <div className="col-4 col-sm-6 col-md-6 col-lg-6 col-xl-8">
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2">
+                            <h6>TRUCK NUMBER:</h6>
+                        </div>
+                        <div className="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2">
+                            <h6>59C1-8888</h6>
+                        </div>
+                        <div className="col-4 col-sm-6 col-md-6 col-lg-6 col-xl-8">
                         </div>
                     </div>
                     <div className="table-responsive">
@@ -312,18 +322,24 @@ export class NewInvoiceModal extends Component {
                 <div className="modal-body">
                     <div className="form-horizontal">
                         <div className="position-relative row">
-                            <label className="col-4 col-sm-2 col-form-label">STATUS:</label>
+                            <label className="col-4 col-form-label">STATUS:</label>
                         </div>
                         <div className="position-relative row">
-                            <label className="col-4 col-sm-2 col-form-label">INVOICE:</label>
+                            <label className="col-4 col-form-label">INVOICE:</label>
                             <div className="col-6">
                                 <input type="text" className="form-control" />
                             </div>
                         </div>
-                        <div className="position-relative form-group row">
-                            <label className="col-4 col-sm-2 col-form-label">EMPLOYEE:</label>
+                        <div className="position-relative row">
+                            <label className="col-4 col-form-label">EMPLOYEE:</label>
                             <div className="col-6">
                                 <EmployeeSelectList listEmployee={this.state.listEmployee} />
+                            </div>
+                        </div>
+                        <div className="position-relative form-group row">
+                            <label className="col-4 col-form-label">TRUCK NUMBER:</label>
+                            <div className="col-6">
+                                <input type="text" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -354,8 +370,10 @@ export class NewInvoiceModal extends Component {
                     <div>
                         <button className="btn btn-outline-dark btn-sm" onClick={this.addNewRow}>Add New</button>
                     </div>
+                </div>
+                <div className="modal-footer">
                     <div>
-                        <button className="btn btn-success">Create</button>
+                        <button className="btn btn-success btn-sm" style={{width:"10rem"}}>Create</button>
                     </div>
                 </div>
             </div>
