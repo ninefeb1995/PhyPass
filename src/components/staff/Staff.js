@@ -45,7 +45,7 @@ export class StaffList extends Component {
                 <div className="card-body d-sm-flex align-items-sm-center justify-content-sm-between flex-sm-wrap">
                     <div className="d-flex align-items-center mb-3 mb-sm-0">
                         <button className="btn btn-success btn-sm" data-toggle="modal" data-target="#popupModal">Create</button>
-                        <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
+                        <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
                             <div className="modal-dialog modal-sm" role="document">
                                 <CreateUserModal onCreateUser={this.userCreated}/>
                             </div>
@@ -156,12 +156,12 @@ export class Staff extends Component {
                     <button className="btn bg-transparent border-warning-400 text-warning-400 rounded-round border-2 btn-icon" data-toggle="modal" data-target={"#popupRemoveModal"+this.state.information.id} title="Remove User">
                         <i className="icon-bin"></i>
                     </button>
-                    <div className="modal fade" id={"popupEditModal"+this.state.information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
+                    <div className="modal fade" id={"popupEditModal"+this.state.information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
                         <div className="modal-dialog modal-sm" role="document">
                             <EditUserModal baseData={information} onEditUser={this.onUserEdited} />
                         </div>
                     </div>
-                    <div className="modal fade" id={"popupRemoveModal"+this.state.information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
+                    <div className="modal fade" id={"popupRemoveModal"+this.state.information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
                         <div className="modal-dialog modal-sm modal-notify modal-danger" role="document">
                             <RemoveUserModal onDelete={this.onDeleteEmit} />
                         </div>

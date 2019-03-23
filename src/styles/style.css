@@ -16,10 +16,29 @@
 
 .custom-card-content {
     padding: 15px;
-    background-color: #fff;
     border-radius: 5px;
     margin: 18px -18px -18px -18px;
-    min-height: 55%;
+    height: 60%;
+}
+
+@media (min-width: 576px)
+{
+    .custom-card-content-sm {
+        padding: 15px;
+        border-radius: 5px;
+        margin: 18px -18px -18px -18px;
+        min-height: 66.5%;
+    }
+}
+
+@media (min-width: 1200px)
+{
+    .custom-card-content-xl {
+        padding: 15px;
+        border-radius: 5px;
+        margin: 18px -18px -18px -18px;
+        min-height: 60%;
+    }
 }
 
 .ta-center {

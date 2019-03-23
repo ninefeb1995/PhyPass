@@ -37,7 +37,7 @@ export class Conveyor extends Component {
                             {Number((information.stats * 100).toFixed(0))}%
                         </div>
                     </div>
-                    <div className="card-content custom-card-content">
+                    <div className="card-content custom-card-content-xl custom-card-content-sm custom-card-content bg-white">
                         <div className="ta-center">
                             <h4 className="font-xx-large">
                                 Conveyor {information.id}
@@ -45,11 +45,14 @@ export class Conveyor extends Component {
                             <p className="font-small">
                                 {information.staff ? information.staff.name : ''}
                             </p>
+                            <p className="font-small">
+                                {information.truckNumber ? information.truckNumber : ''}
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <div className="modal fade" id={"popupModal"+information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
+                <div className="modal fade" id={"popupModal"+information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                     <div className="modal-dialog modal-lg" role="document">
                         <Modal information = {information}/>
                     </div>
@@ -433,7 +436,7 @@ export class NewInvoiceModal extends Component {
                 </div>
                 <div className="modal-footer">
                     <div>
-                        <button className="btn btn-outline-dark btn-sm" onClick={() => this.addNewRow()}>Add New</button>
+                        <a role="button" href="#" className="btn btn-outline-dark btn-sm" onClick={() => this.addNewRow()}><i className="icon-plus2"></i> Add New</a>
                     </div>
                 </div>
                 <div className="modal-footer">
