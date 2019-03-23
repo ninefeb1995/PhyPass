@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import * as DashBoardService from '../../app/services/dashboard';
 import * as EmployeeService from '../../app/services/options/employee';
 import * as CategoryService from '../../app/services/options/category';
@@ -264,14 +263,15 @@ export class NewInvoiceModal extends Component {
             listSkusRaw: [],
             parents: [],
             children: [],
-            listSkuHandled: []
+            listSkuHandled: [],
+            tableRow: []
         };
     }
 
     componentDidMount() {
         EmployeeService.getListEmployee(1, 50, (res) => {
             if (res.data.err === 0) {
-                this.setState({listEmployee: res.data.data});
+                this.setState({listEmployee: res.data.data});               
             }
         });
         CategoryService.getListSku(1, 50, (res) => {
@@ -280,6 +280,12 @@ export class NewInvoiceModal extends Component {
                 this.handleRawData();
             }
         });
+    }
+
+    addNewRow() {
+        let listRowTemp = this.state.tableRow;
+        listRowTemp.push(this.rowTemplate(this.state.listSkuHandled));
+        this.setState({tableRow: listRowTemp});
     }
 
     handleRawData() {
@@ -301,11 +307,20 @@ export class NewInvoiceModal extends Component {
             });
             let listSkuHandled = parents.concat(...children);
             this.setState({parents, children, listSkuHandled});
+            this.addNewRow();
         }
     }
 
-    addNewRow = () => {
-        
+    rowTemplate(listSku) {
+        return <tr scope="row">
+            <td scope="col">
+                <CategorySelectList listCategories={listSku} />
+            </td>
+            <td scope="col">
+                <input type="text" className="form-control" />
+            </td>
+            <td scope="col"></td>
+        </tr>;
     }
 
     render() {
@@ -344,7 +359,7 @@ export class NewInvoiceModal extends Component {
                         </div>
                     </div>
                     <div className="table-responsive">
-                        <table className="table table-hover table-bordered">
+                        <table id="table-data-contain" className="table table-hover table-bordered">
                             <thead className="theme_bar theme_bar_sm theme_bar_lg">
                                 <tr>
                                     <th>Name</th>
@@ -353,22 +368,16 @@ export class NewInvoiceModal extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr scope="row">
-                                    <td scope="col">
-                                        <CategorySelectList listCategories={this.state.listSkuHandled} />
-                                    </td>
-                                    <td scope="col">
-                                        <input type="text" className="form-control" />
-                                    </td>
-                                    <td scope="col"></td>
-                                </tr>
+                                {this.state.tableRow.map((item) => {
+                                    return item;
+                                })}
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div className="modal-footer">
                     <div>
-                        <button className="btn btn-outline-dark btn-sm" onClick={this.addNewRow}>Add New</button>
+                        <button className="btn btn-outline-dark btn-sm" onClick={() => this.addNewRow()}>Add New</button>
                     </div>
                 </div>
                 <div className="modal-footer">
