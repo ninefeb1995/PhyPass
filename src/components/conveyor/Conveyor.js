@@ -293,8 +293,8 @@ export class NewInvoiceModal extends Component {
         let listRowData = this.state.invoiceDetailData;
         listRowTemp.push(this.rowTemplate(this.state.listSkuHandled, listRowTemp.length));
         listRowData.push({
-            invoice_code: '',
-            sku_id: 0,
+            invoiceCode: '',
+            skuId: 0,
             target: 0
         });
         this.setState({
@@ -346,7 +346,7 @@ export class NewInvoiceModal extends Component {
         let listRowData = this.state.invoiceDetailData;
         listRowData.forEach((item, itemIndex) => {
             if (itemIndex === index) {
-                item.sku_id = Number.parseInt(value);
+                item.skuId = Number.parseInt(value);
             }
         });
         this.setState({invoiceDetailData: listRowData});
@@ -372,11 +372,19 @@ export class NewInvoiceModal extends Component {
         };
         DashBoardService.createNewConveyorDetail(invoiceData, (res) => {
             if (res.data.err === 0) {
-                let invoice_code = res.data.data.code; // double check
-                
+                let invoiceCode = res.data.data.code; // double check
+                this.state.invoiceDetailData.forEach((item) => {
+                    if (item.sku_id && item.sku_id > 0 && item.target && item.target >= 0) {
+                        item.invoiceCode = invoiceCode;
+                        DashBoardService.createNewInvoiceDetail(item, (res1) => {
+                            if (res1.data.err === 0) {
+                                // handle success here
+                            }
+                        })
+                    }
+                });
             }
         });
-
     }
 
     render() {

@@ -9,10 +9,8 @@ export class Layout extends Component {
         return(
             <div id="page" className="navbar-top">
                 <NavMenu />
-
                 <div className="page-content">
                     <SideBar />
-
                     <div className="bg-white content-wrapper">
                         <div className="page-header">
                             <div className="page-header-content header-elements-md-inline">

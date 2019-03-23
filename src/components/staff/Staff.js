@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import * as EmployeeServices from '../../app/services/options/employee';
+import { toast } from 'react-toastify';
+import Message from '../../app/constants/message';
 
 export class StaffList extends Component {
     displayName = StaffList.name;
@@ -26,6 +28,10 @@ export class StaffList extends Component {
             const temp = this.state.listStaff.slice();
             temp.push(data);
             this.setState({listStaff: temp});
+            toast(Message.Employee.ADD_SUCCESS, {
+                type: toast.TYPE.SUCCESS,
+                autoClose: 2000
+            });
         }
     }
 
@@ -105,14 +111,22 @@ export class Staff extends Component {
 
     onUserEdited(data) {
         this.setState({information:data});
+        toast(Message.Employee.UPDATE_SUCCESS, {
+            type: toast.TYPE.SUCCESS,
+            autoClose: 2000
+        });
     }
 
     onDeleteEmit() {
         EmployeeServices.deleteEmployeeById(this.state.information.id, (res) => {
             if (res.data.err === 0) {
                 this.props.onUserDeleted(this.state.information.id);
+                toast(Message.Employee.DELETE_SUCCESS, {
+                    type: toast.TYPE.SUCCESS,
+                    autoClose: 2000
+                });
             }
-        });  
+        });
     }
 
     parseRole(id) {
