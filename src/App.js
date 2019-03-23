@@ -6,6 +6,8 @@ import { Report } from './components/report/Report';
 import { StaffList } from './components/staff/Staff';
 import { CategoryList } from './components/category/Category';
 import { Login } from './components/login/Login';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class App extends Component {
   displayName = App.name;
@@ -18,6 +20,7 @@ export default class App extends Component {
         <Route exact path='/report' component={Report} />
         <Route exact path='/staff' component={StaffList} />
         <Route exact path='/category' component={CategoryList} />
+        <ToastContainer />
       </Layout>
     );
   }

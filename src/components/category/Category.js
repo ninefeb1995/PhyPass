@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import * as CategoryServices from '../../app/services/options/category';
+import { toast } from 'react-toastify';
+import Message from '../../app/constants/message';
 
 export class CategoryList extends Component {
     displayName = CategoryList.name;
@@ -28,6 +30,10 @@ export class CategoryList extends Component {
             const temp = this.state.listSkusRaw.slice();
             temp.push(data);
             this.setState({listSkusRaw: temp});
+            toast(Message.CATEGORY.ADD_SUCCESS, {
+                type: toast.TYPE.SUCCESS,
+                autoClose: 2000
+            });
             this.handleRawData();
         }
     }
@@ -54,7 +60,6 @@ export class CategoryList extends Component {
     }
 
     render() {
-
         return (
             <div className="card">
                 <div className="card-header header-elements-inline">
@@ -84,10 +89,9 @@ export class Category extends Component {
 
     constructor(props) {
         super(props);
-    }
-
-    state = {
-        toggle: false
+        this.state = {
+            toggle: false
+        }
     }
 
     toggle = () => {
