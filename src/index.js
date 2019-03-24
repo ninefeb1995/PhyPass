@@ -1,24 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import * as serviceWorker from './serviceWorker';
-import { IntlProvider } from 'react-intl';
-import './lib/jquery';
-import './lib/bootstrap';
-import './lib/font-awesome';
-import { HashRouter, Route } from 'react-router-dom';
-import { Home } from './app/layout/home.component';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+import './styles/style.css';
+//import './lib';
+
+const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
+const rootElement = document.getElementById('root');
 
 ReactDOM.render(
-    <IntlProvider locale="en">
-        <HashRouter>
-            <div className="main">
-                <Route exact path='/' component={Home} />
-            </div>
-        </HashRouter>
-    </IntlProvider>,
-    document.getElementById('root')
-);
+    <BrowserRouter basename={baseUrl}>
+        <App />
+    </BrowserRouter>,
+    rootElement);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

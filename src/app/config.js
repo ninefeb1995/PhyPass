@@ -1,3 +1,3 @@
-const getPath = function(value) {
+export const getPath = function(value) {
     return 'http://cp-api.phypass.com/' + value;
 };

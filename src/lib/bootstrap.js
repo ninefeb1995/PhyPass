@@ -1,2 +1,3 @@
-import 'bootstrap3/dist/css/bootstrap.min.css';
-import 'bootstrap3/dist/js/bootstrap.min.js';
+import 'popper.js/dist/umd/popper.min.js';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
