@@ -30,14 +30,14 @@ export class Conveyor extends Component {
         const { information } = this.props;
         
         return (
-            <div className="card" style={{minWidth: "100%"}}>
+            <div className="card custom-card">
                 <div className={"card-body " + this.getBgColorClassName(information.status)} data-toggle="modal" data-target={"#popupModal"+information.id} style={{cursor : 'pointer'}}>
                     <div className="d-flex jc-center">
                         <div className="btn rounded-round btn-xl bg-white">
                             {Number((information.stats * 100).toFixed(0))}%
                         </div>
                     </div>
-                    <div className="card-content custom-card-content-xl custom-card-content-sm custom-card-content bg-white">
+                    <div className="card-content custom-card-content bg-white">
                         <div className="ta-center">
                             <h4 className="font-xx-large">
                                 Conveyor {information.id}
