@@ -29,10 +29,11 @@ export const addNewSku = async (data, callback) => {
     callback(res);
 };
 
-export const updateSku = (data, callback) => {
-    axios.put(Config.getPath('sku/edit'), data)
-    .then((res) => callback(res))
-    .catch((err) => callback(err));
+export const updateSku = async (data, callback) => {
+    let res = await axios.get(Config.getPath('sku/edit'), {
+        params: data
+    });
+    callback(res);
 };
 
 export const deleteSkuById = (id, callback) => {

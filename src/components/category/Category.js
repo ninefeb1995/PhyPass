@@ -14,6 +14,7 @@ export class CategoryList extends Component {
             children: []
         }
         this.onCategoryCreated = this.onCategoryCreated.bind(this);
+        this.handleUpdatingSkuList = this.handleUpdatingSkuList.bind(this);
     }
 
     componentDidMount() {
@@ -36,6 +37,13 @@ export class CategoryList extends Component {
             });
             this.handleRawData();
         }
+    }
+
+    handleUpdatingSkuList(data) {
+        const temp = this.state.listSkusRaw.filter((item) => item.id !== data.id);
+        temp.push(data);
+        this.setState({listSkusRaw: temp});
+        this.handleRawData();
     }
 
     handleRawData() {
@@ -67,7 +75,7 @@ export class CategoryList extends Component {
                         <button className="btn btn-success btn-sm" data-toggle="modal" data-target="#popupModal">New Category</button>
                         <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
                             <div className="modal-dialog modal-sm" role="document">
-                                <NewCategoryFormModal listParents={this.state.parents} onCreateCategory={this.onCategoryCreated} />
+                                <NewCategoryFormModal listParents={this.state.parents} onCreatedCategory={this.onCategoryCreated} />
                             </div>
                         </div>
                     </div>
@@ -75,7 +83,7 @@ export class CategoryList extends Component {
                 <div className="card-body">
                     <ul className="nav nav-sidebar" data-nav-type="collapsible">
                         {this.state.parents.map((item) => {
-                            return <Category key={item.id} information={item} />;
+                            return <Category key={item.id} information={item} listParents={this.state.parents} onCategoryEditedAnnouce={this.handleUpdatingSkuList} />;
                         })}
                     </ul>
                 </div>
@@ -92,10 +100,21 @@ export class Category extends Component {
         this.state = {
             toggle: false
         }
+        this.onCategoryEdited = this.onCategoryEdited.bind(this);
     }
 
-    toggle = () => {
-        this.state.toggle? this.setState({toggle: false}) : this.setState({toggle: true});
+    toggle(e) {
+        if (e.target.tagName.toLowerCase() !== 'i') {
+            this.state.toggle? this.setState({toggle: false}) : this.setState({toggle: true});
+        }
+    }
+
+    onEditSku(e) {
+        e.preventDefault();
+    }
+
+    onCategoryEdited(data) {
+        this.props.onCategoryEditedAnnouce(data);
     }
 
     render() {
@@ -103,7 +122,15 @@ export class Category extends Component {
 
         return (
             <li className={this.state.toggle? "nav-item nav-item-submenu nav-item-open" : "nav-item nav-item-submenu"}>
-                <a onClick={this.toggle} style={{cursor: "pointer"}} className="nav-link bg-blue">{information.name}</a>
+                <span onClick={(e) => this.toggle(e)} style={{cursor: "pointer"}} className="nav-link bg-blue">
+                    {information.name}
+                    <i onClick={(e) => this.onEditSku(e)} data-toggle="modal" data-target={"#popupEditModal"+information.id} className="fa fa-edit margin-left-10"></i>                   
+                </span>
+                <div className="modal fade" id={"popupEditModal"+information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+                    <div className="modal-dialog modal-sm" role="document">
+                        <EditCategoryFormModal listParents={this.props.listParents} baseData={information} onEditedCategory={this.onCategoryEdited} />
+                    </div>
+                </div>
                 <ul className="nav nav-group-sub" style={{display: this.state.toggle? "block" : ""}}>
                     {information.children.map((item) => {
                         return <SubCategory key={item.id} information={item} />;
@@ -154,7 +181,7 @@ export class NewCategoryFormModal extends Component {
         }
         CategoryServices.addNewSku(data, (res) => {
             if (res.data.err === 0) {
-                this.props.onCreateCategory(res.data.data);
+                this.props.onCreatedCategory(res.data.data);
             }
         });
     }
@@ -193,6 +220,97 @@ export class NewCategoryFormModal extends Component {
                 </div>
                 <div className="modal-footer">
                     <button onClick={() => this.onCreateNewCategory()} data-dismiss="modal" className="btn btn-success btn-sm">Done</button>
+                </div>             
+            </div>
+        );
+    }
+}
+
+export class EditCategoryFormModal extends Component {
+    displayName = EditCategoryFormModal.name;
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            categoryName: '',
+            parentId: 0
+        }
+    }
+
+    componentWillMount() {
+        this.setState({
+            categoryName: this.props.baseData.name,
+            parentId: this.props.baseData.parentId,
+        });
+    }
+
+    updateNameValue(event) {
+        this.setState({categoryName: event.target.value});
+    }
+
+    onEditCategory() {
+        let data = {
+            id: this.props.baseData.id,
+            name: this.state.categoryName,
+            parent_id: this.state.parentId
+        }
+        CategoryServices.updateSku(data, (res) => {
+            if (res.data.err === 0) {
+                this.props.onEditedCategory(data);
+            }
+            // else if (res.data.err === 0) {
+            //     toast("Internal server error", {
+            //         type: toast.TYPE.ERROR,
+            //         autoClose: 2000
+            //     });
+            // }else if (res.data.err === 0) {
+            //     toast("Internal server error", {
+            //         type: toast.TYPE.ERROR,
+            //         autoClose: 2000
+            //     });
+            // }else if (res.data.err === 0) {
+            //     toast("Internal server error", {
+            //         type: toast.TYPE.ERROR,
+            //         autoClose: 2000
+            //     });
+            // }
+        });
+    }
+
+    render() {
+        const { listParents } = this.props;
+
+        return (
+            <div className="modal-content">
+                <div className="modal-header bg-blue">
+                    <h4 className="modal-title" style={{paddingTop: "0.3em"}}>EDIT CATEGORY</h4>
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div> 
+                <div className="modal-body">
+                    <div className="form-horizontal">
+                        <div className="position-relative row">
+                            <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Category Name:</label>
+                            <div className="col-6">
+                                <input onChange={(event) => this.updateNameValue(event)} type="text" value={this.state.categoryName} className="form-control" />
+                            </div>
+                        </div>
+                        <div className="position-relative form-group row">
+                            <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Parent Category (Optional):</label>
+                            <div className="col-6">
+                                <select className="form-control" id="parentCategoryName" onChange={(e) => this.setState({ parentId: e.target.value })} value={this.state.parentId}>
+                                    <option key="0" value="0">None</option>
+                                    {listParents.map((item) => {
+                                        return <option key={item.id} value={item.id}>{item.name}</option>;
+                                    })}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal-footer">
+                    <button onClick={() => this.onEditCategory()} data-dismiss="modal" className="btn btn-success btn-sm">Done</button>
                 </div>             
             </div>
         );

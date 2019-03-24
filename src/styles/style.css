@@ -78,3 +78,7 @@ a.waves-effect, a.waves-light {
     align-items: center;
     height: 100%;
 }
+
+.margin-left-10 {
+    margin-left: 10px;
+}
