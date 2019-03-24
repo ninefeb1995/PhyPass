@@ -10,7 +10,7 @@ export class Report extends Component {
                 <div className="card-header header-elements-inline">
                     <div className="header-elements-inline">
                         <button className="btn btn-success btn-sm" data-toggle="modal" data-target="#popupModal">New Report Template</button>
-                        <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true">
+                        <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
                             <div className="modal-dialog modal-lg" role="document">
                                 <Modal />
                             </div>
