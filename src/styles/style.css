@@ -67,3 +67,9 @@ a.waves-effect, a.waves-light {
 .margin-left-10 {
     margin-left: 10px;
 }
+
+.css-1oubc3t{
+    background-clip: border-box !important;
+    border-width: 1px 0 !important;
+    border-top-color: transparent!important;
+}
