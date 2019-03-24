@@ -6,6 +6,10 @@ const Message = {
     },
     CATEGORY: {
         ADD_SUCCESS: 'New category has been created',
+    },
+    DASHBOARD: {
+        UPDATE_STATUS_SUCCESS: 'Conveyor status has been updated',
+        CREATE_CONVEYOR_DETAIL_SUCCESS: 'Creating conveyor detail successfully'
     }
 };
 

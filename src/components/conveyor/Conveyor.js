@@ -3,6 +3,8 @@ import * as DashBoardService from '../../app/services/dashboard';
 import * as EmployeeService from '../../app/services/options/employee';
 import * as CategoryService from '../../app/services/options/category';
 import BtnNumber from '../../app/constants/constants';
+import { toast } from 'react-toastify';
+import Message from '../../app/constants/message';
 
 export class Conveyor extends Component {
     displayName = Conveyor.name;
@@ -117,7 +119,10 @@ export class ConveyorDetailModal extends Component {
         };
         DashBoardService.updateConveyorDetail(data, (res) => {
             if (res.data.err === 0) {
-                
+                toast(Message.DASHBOARD.UPDATE_STATUS_SUCCESS, {
+                    type: toast.TYPE.SUCCESS,
+                    autoClose: 2000
+                });
             }
         });
     }
@@ -373,6 +378,10 @@ export class NewInvoiceModal extends Component {
         DashBoardService.createNewConveyorDetail(invoiceData, (res) => {
             if (res.data.err === 0) {
                 let invoiceCode = res.data.data.code; // double check
+                toast(Message.DASHBOARD.CREATE_CONVEYOR_DETAIL_SUCCESS, {
+                    type: toast.TYPE.SUCCESS,
+                    autoClose: 2000
+                });
                 this.state.invoiceDetailData.forEach((item) => {
                     if (item.sku_id && item.sku_id > 0 && item.target && item.target >= 0) {
                         item.invoiceCode = invoiceCode;
@@ -385,6 +394,18 @@ export class NewInvoiceModal extends Component {
                 });
             }
         });
+    }
+
+    validateData() {
+        if (this.state.invoiceCode && this.state.invoiceCode !== ''
+            && this.state.staffId && this.state.staffId > 0
+            && this.state.truckNumber
+            && this.state.invoiceDetailData && this.state.invoiceDetailData.length > 0
+            && this.state.invoiceDetailData[0].target && this.state.invoiceDetailData[0].target >= 0
+            && this.state.invoiceDetailData[0].skuId && this.state.invoiceDetailData[0].skuId > 0) {
+                return true;
+        }
+        return false;
     }
 
     render() {
@@ -446,7 +467,7 @@ export class NewInvoiceModal extends Component {
                 </div>
                 <div className="modal-footer">
                     <div>
-                        <button className="btn btn-success btn-sm" data-dismiss="modal" onClick={() => this.onStart()} style={{width:"10rem"}}>Done</button>
+                        <button disabled={!this.validateData()} className="btn btn-success btn-sm" data-dismiss="modal" onClick={() => this.onStart()} style={{width:"10rem"}}>Done</button>
                     </div>
                 </div>
             </div>
