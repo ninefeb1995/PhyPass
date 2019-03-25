@@ -5,10 +5,19 @@ import { SideBar } from './SideBar';
 export class Layout extends Component {
     displayName = Layout.name;
 
+    constructor(props) {
+        super(props);
+        this.onLogout = this.onLogout.bind(this);
+    }
+
+    onLogout() {
+        this.props.logout();
+    }
+
     render() {
         return(
             <div id="page" className="navbar-top">
-                <NavMenu />
+                <NavMenu logout={this.onLogout} />
                 <div className="page-content">
                     <SideBar />
                     <div className="bg-white content-wrapper">
