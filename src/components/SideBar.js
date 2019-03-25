@@ -7,18 +7,16 @@ export class SideBar extends Component {
     render () {
         return (
             <div className="sidebar sidebar-dark sidebar-main sidebar-fixed sidebar-expand-md">
-
                 <div className="sidebar-mobile-toggler text-center">
                     <a href="#" className="sidebar-mobile-main-toggle">
                         <i className="icon-arrow-left8"></i>
                     </a>
                     Navigation
-				<a href="#" className="sidebar-mobile-expand">
-                        <i className="icon-screen-full"></i>
-                        <i className="icon-screen-normal"></i>
+                    <a href="#" className="sidebar-mobile-expand">
+                            <i className="icon-screen-full"></i>
+                            <i className="icon-screen-normal"></i>
                     </a>
                 </div>
-
                 <div className="sidebar-content">
                     <div className="card card-sidebar-mobile">
                         <ul className="nav nav-sidebar" data-nav-type="accordion">
