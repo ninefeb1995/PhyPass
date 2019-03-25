@@ -77,3 +77,7 @@ a.waves-effect, a.waves-light {
 .cursor {
     cursor: pointer;
 }
+
+body {
+    background-color: white;
+}

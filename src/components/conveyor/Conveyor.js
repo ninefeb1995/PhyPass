@@ -525,7 +525,7 @@ export class EmployeeSelectList extends Component {
                     borderRadius: 0,
                     colors: {
                         ...theme.colors,
-                        primary: '#558b2f',
+                        primary: '#339966',
                     },
                 })}
             />
@@ -575,7 +575,7 @@ export class CategorySelectList extends Component {
                     borderRadius: 0,
                     colors: {
                         ...theme.colors,
-                        primary: '#558b2f',
+                        primary: '#339966',
                     },
                 })}
             />
