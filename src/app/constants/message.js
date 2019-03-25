@@ -6,6 +6,7 @@ const Message = {
     },
     CATEGORY: {
         ADD_SUCCESS: 'New category has been created',
+        UPDATE_PARENT_VIOLATION: 'You try to update a sku having children to be a child sku'
     },
     DASHBOARD: {
         UPDATE_STATUS_SUCCESS: 'Conveyor status has been updated',
