@@ -5,6 +5,7 @@ import * as CategoryService from '../../app/services/options/category';
 import BtnNumber from '../../app/constants/constants';
 import { toast } from 'react-toastify';
 import Message from '../../app/constants/message';
+import Select from 'react-select';
 
 export class Conveyor extends Component {
     displayName = Conveyor.name;
@@ -335,15 +336,19 @@ export class NewInvoiceModal extends Component {
     }
 
     rowTemplate(listSku, index) {
-        return <tr scope="row">
-            <td scope="col">
-                <CategorySelectList onChange={this.onSkuSelected} index={index} listCategories={listSku} />
-            </td>
-            <td scope="col">
-                <input onChange={(e) => this.onTargetSet(e.target.value, index)} type="number" className="form-control" />
-            </td>
-            <td scope="col"></td>
-        </tr>;
+        return (
+            <div key={index} className="row">
+                <div className="col-4 align-self-items-center">
+                    <CategorySelectList onChange={this.onSkuSelected} index={index} listCategories={listSku} />
+                </div>
+                <div className="col-4 align-self-items-center">
+                    <input onChange={(e) => this.onTargetSet(e.target.value, index)} type="number" className="form-control" />
+                </div>
+                <div className="col-4 align-self-items-center">
+                    
+                </div>
+            </div>
+        );
     }
 
     onEmployeeSelected(value) {
@@ -446,21 +451,21 @@ export class NewInvoiceModal extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="table-responsive">
-                        <table id="table-data-contain" className="table table-hover table-bordered">
-                            <thead className="theme_bar theme_bar_sm theme_bar_lg">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Target</th>
-                                    <th>In</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.state.tableRow.map((item) => {
-                                    return item;
-                                })}
-                            </tbody>
-                        </table>
+                    <div className="container-fluid">
+                        <div className="align-content-center bg-dark-alpha row" style={{height: "30px"}}>
+                            <div className="col-4 align-self-items-center">
+                                Name
+                            </div>
+                            <div className="col-4 align-self-items-center">
+                                Target
+                            </div>
+                            <div className="col-4 align-self-items-center">
+                                In
+                            </div>
+                        </div>
+                        {this.state.tableRow.map((item) => {
+                            return item;
+                        })}
                     </div>
                 </div>
                 <div className="modal-footer">
@@ -485,20 +490,45 @@ export class EmployeeSelectList extends Component {
         super(props);
     }
 
-    onSelectEmployee(value) {
-        this.props.onChange(value);
+    state = {
+        selectedOption: null
+    }
+
+    onSelectEmployee = (selectedOption) => {
+        this.setState({ selectedOption })
+        this.props.onChange(selectedOption.value);
     }
 
     render () {
+        const { selectedOption } = this.state;
         let { listEmployee } = this.props;
+        let options = [];
+
+        options.push({
+            value: '0',
+            label: 'None'
+        })
+
+        listEmployee.map((item) => {
+            let option = {
+                value: item.id,
+                label: item.name
+            }
+
+            options.push(option);
+        })
 
         return (
-            <select onChange={(e) => this.onSelectEmployee(e.target.value)} className="form-control">
-                <option key="0" value="0">None</option>
-                {listEmployee.map((item) => {
-                    return <option key={item.id} value={item.id}>{item.name}</option>;
+            <Select value={selectedOption} options={options} onChange={this.onSelectEmployee}
+                theme={(theme) => ({
+                    ...theme,
+                    borderRadius: 0,
+                    colors: {
+                        ...theme.colors,
+                        primary: '#558b2f',
+                    },
                 })}
-            </select>
+            />
         );
     }
 }
@@ -510,19 +540,45 @@ export class CategorySelectList extends Component {
         super(props);
     }
 
-    onSelectSku(value) {
-        this.props.onChange(value, this.props.index);
+    state = {
+        selectedOption: null
+    }
+
+    onSelectSku = (selectedOption) => {
+        this.setState({ selectedOption });
+        this.props.onChange(selectedOption.value, this.props.index);
     }
 
     render () {
+        const { selectedOption } = this.state;
         let { listCategories } = this.props;
+        let options = [];
+
+        options.push({
+            value: '0',
+            label: 'None'
+        })
+
+        listCategories.map((item) => {
+            let option = {
+                value: item.id,
+                label: item.name
+            };
+
+            options.push(option);
+        })
+
         return (
-            <select onChange={(e) => this.onSelectSku(e.target.value)} className="form-control">
-                <option key="0" value="0">None</option>
-                {listCategories.map((item) => {
-                    return <option key={item.id} value={item.id}>{item.name}</option>;
+            <Select value={selectedOption} options={options} onChange={this.onSelectSku}
+                theme={(theme) => ({
+                    ...theme,
+                    borderRadius: 0,
+                    colors: {
+                        ...theme.colors,
+                        primary: '#558b2f',
+                    },
                 })}
-            </select>
+            />
         );
     }
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as CategoryServices from '../../app/services/options/category';
 import { toast } from 'react-toastify';
 import Message from '../../app/constants/message';
+import Select from 'react-select';
 
 export class CategoryList extends Component {
     displayName = CategoryList.name;
@@ -166,12 +167,20 @@ export class NewCategoryFormModal extends Component {
         super(props);
         this.state = {
             categoryName: '',
-            parentId: 0
+            parentId: 0,
+            selectedOption: []
         }
     }
 
     updateNameValue(event) {
         this.setState({categoryName: event.target.value});
+    }
+
+    updateParenIDValue = (selectedOption) => {
+        this.setState({
+            parentId: selectedOption.value,
+            selectedOption
+        })
     }
 
     onCreateNewCategory() {
@@ -187,7 +196,23 @@ export class NewCategoryFormModal extends Component {
     }
 
     render() {
+        const { selectedOption } = this.state;
         const { listParents } = this.props;
+        let options = [];
+
+        options.push({
+            value: '0',
+            label: 'None'
+        })
+
+        listParents.map((item) => {
+            let option = {
+                value: item.id,
+                label: item.name
+            }
+
+            options.push(option);
+        })
 
         return (
             <div className="modal-content">
@@ -208,12 +233,16 @@ export class NewCategoryFormModal extends Component {
                         <div className="position-relative form-group row">
                             <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Parent Category (Optional):</label>
                             <div className="col-6">
-                                <select className="form-control" id="parentCategoryName" onChange={(e) => this.setState({ parentId: e.target.value })}>
-                                    <option key="0" value="0">None</option>
-                                    {listParents.map((item) => {
-                                        return <option key={item.id} value={item.id}>{item.name}</option>;
+                                <Select value={selectedOption} options={options} onChange={this.updateParenIDValue}
+                                    theme={(theme) => ({
+                                        ...theme,
+                                        borderRadius: 0,
+                                        colors: {
+                                            ...theme.colors,
+                                            primary: '#558b2f',
+                                        },
                                     })}
-                                </select>
+                                />
                             </div>
                         </div>
                     </div>
@@ -233,7 +262,8 @@ export class EditCategoryFormModal extends Component {
         super(props);
         this.state = {
             categoryName: '',
-            parentId: 0
+            parentId: 0,
+            selectedOption: []
         }
     }
 
@@ -248,12 +278,20 @@ export class EditCategoryFormModal extends Component {
         this.setState({categoryName: event.target.value});
     }
 
+    updateParenIDValue = (selectedOption) => {
+        this.setState({
+            parentId: selectedOption.value,
+            selectedOption
+        })
+    }
+
     onEditCategory() {
         let data = {
             id: this.props.baseData.id,
             name: this.state.categoryName,
             parent_id: this.state.parentId
         }
+
         CategoryServices.updateSku(data, (res) => {
             if (res.data.err === 0) {
                 this.props.onEditedCategory(data);
@@ -278,7 +316,23 @@ export class EditCategoryFormModal extends Component {
     }
 
     render() {
+        const { selectedOption } = this.state;
         const { listParents } = this.props;
+        let options = [];
+
+        options.push({
+            value: '0',
+            label: 'None'
+        })
+
+        listParents.map((item) => {
+            let option = {
+                value: item.id,
+                label: item.name
+            };
+            
+            options.push(option);
+        })
 
         return (
             <div className="modal-content">
@@ -299,12 +353,16 @@ export class EditCategoryFormModal extends Component {
                         <div className="position-relative form-group row">
                             <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Parent Category (Optional):</label>
                             <div className="col-6">
-                                <select className="form-control" id="parentCategoryName" onChange={(e) => this.setState({ parentId: e.target.value })} value={this.state.parentId}>
-                                    <option key="0" value="0">None</option>
-                                    {listParents.map((item) => {
-                                        return <option key={item.id} value={item.id}>{item.name}</option>;
+                                <Select value={selectedOption} options={options} onChange={this.updateParenIDValue}
+                                    theme={(theme) => ({
+                                        ...theme,
+                                        borderRadius: 0,
+                                        colors: {
+                                            ...theme.colors,
+                                            primary: '#558b2f',
+                                        },
                                     })}
-                                </select>
+                                />
                             </div>
                         </div>
                     </div>

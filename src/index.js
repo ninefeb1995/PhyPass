@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import Routes from './App';
 import * as serviceWorker from './serviceWorker';
 import './styles/style.css';
-import './lib';
 
 const rootElement = document.getElementById('root');
 ReactDOM.render(<Routes/>, rootElement);
