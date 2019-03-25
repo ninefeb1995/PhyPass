@@ -9,9 +9,7 @@ const auth = new Auth();
 
 const Routes = () => (
   <Router history={history} component={Home}>
-    <div className="wrapper">
       <Route render={(props) => <Home auth={auth} {...props} />} />
-    </div>
   </Router>
 );
 

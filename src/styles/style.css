@@ -73,3 +73,7 @@ a.waves-effect, a.waves-light {
     border-width: 1px 0 !important;
     border-top-color: transparent!important;
 }
+
+body {
+    background-color: white;
+}

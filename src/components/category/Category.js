@@ -239,7 +239,7 @@ export class NewCategoryFormModal extends Component {
                                         borderRadius: 0,
                                         colors: {
                                             ...theme.colors,
-                                            primary: '#558b2f',
+                                            primary: '#339966',
                                         },
                                     })}
                                 />
@@ -359,7 +359,7 @@ export class EditCategoryFormModal extends Component {
                                         borderRadius: 0,
                                         colors: {
                                             ...theme.colors,
-                                            primary: '#558b2f',
+                                            primary: '#339966',
                                         },
                                     })}
                                 />
