@@ -6,6 +6,7 @@ export default class Auth {
         localStorage.setItem('loggedIn', true);
         localStorage.setItem('expiresAt', expiresAt);
         history.replace(location.path);
+        document.location.reload(true); // Reload page to help external js function working after routing from login page to layout page.
     }
 
     logout = () => {
