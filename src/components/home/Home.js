@@ -9,7 +9,6 @@ import { StaffList } from '../../components/staff/Staff';
 import { CategoryList } from '../../components/category/Category';
 
 export class Home extends Component {
-
     constructor(props) {
         super(props);
         this.login = this.login.bind(this);

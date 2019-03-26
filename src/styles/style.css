@@ -44,7 +44,8 @@
     font-size: 2.25003rem;
 }
 
-a.waves-effect, a.waves-light {
+a.waves-effect,
+a.waves-light {
     display: inline-block;
 }
 
@@ -68,16 +69,39 @@ a.waves-effect, a.waves-light {
     margin-left: 10px;
 }
 
-.css-1oubc3t{
+.css-1oubc3t {
     background-clip: border-box !important;
     border-width: 1px 0 !important;
     border-top-color: transparent!important;
+}
+
+.cursor {
+    cursor: pointer;
 }
 
 body {
     background-color: white;
 }
 
-.cursor {
-    cursor: pointer;
+.sort-icon:after {
+    float: right;
+    color: hsl(20, 0%, 70%);
+    display: block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.sort-icon.sort-ascending:after {
+    content: '\f0de';
+}
+
+.sort-icon.sort-descending:after {
+    content: '\f0dd';
+}
+
+.sort-icon.sort-none:after {
+    content: '\f0dc';
 }

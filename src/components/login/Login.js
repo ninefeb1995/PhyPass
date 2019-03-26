@@ -12,7 +12,7 @@ export class Login extends Component {
     }
 
     onLogin() {
-        if (this.state.username === '1' && this.state.password === '1') {
+        if (this.state.username === 'thinhle' && this.state.password === 'thinhle') {
             this.props.login();
         }
     }
