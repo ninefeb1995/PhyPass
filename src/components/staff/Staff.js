@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import * as EmployeeServices from '../../app/services/options/employee';
 import { toast } from 'react-toastify';
 import Message from '../../app/constants/message';
+import { DataTable } from 'react-data-components';
+//import 'react-data-components/css/table-twbs.css'
 
 export class StaffList extends Component {
     displayName = StaffList.name;
@@ -35,13 +37,82 @@ export class StaffList extends Component {
         }
     }
 
+    onUserEdited() {
+
+        console.log('onUserEdited alert')
+        //this.setState({information:data});
+        toast(Message.Employee.UPDATE_SUCCESS, {
+            type: toast.TYPE.SUCCESS,
+            autoClose: 2000
+        });
+    }
+
     onDeleteStaff(id) {
-        let listStaffTemp = this.state.listStaff.filter((item) => item.id !== id);
-        this.setState({listStaff: listStaffTemp});
+        console.log('delete called ' + id)
+        EmployeeServices.deleteEmployeeById(id, (res) => {
+            if (res.data.err === 0) {
+                let listStaffTemp = this.state.listStaff.filter((item) => item.id !== id);
+                this.setState({listStaff: listStaffTemp});
+
+                toast(Message.Employee.DELETE_SUCCESS, {
+                    type: toast.TYPE.SUCCESS,
+                    autoClose: 2000
+                });
+            }
+        });
+    }
+    
+
+    parseRole(id) {
+        switch(id) {
+            case 1:
+                return <span>Worker</span>;
+            case 2:
+                return <span>Supervisor</span>;
+            case 3:
+                return <span>Manager</span>
+            default:
+                return <span>Unknown</span>
+        }
     }
 
     render() {
         const { listStaff } = this.state;
+
+        const renderAvatar = (val, row) =>
+            <span></span>
+
+        const renderRole = (val, row) => this.parseRole(row.role)
+
+        const renderAction = (val, row) =>
+            <div>
+                <button className="btn bg-transparent border-success text-success rounded-round border-2 btn-icon" data-toggle="modal" data-target={"#popupEditModal" + row.id} title="Edit User">
+                    <i className="icon-pencil"></i>
+                </button>
+                <span style={{ marginLeft: "2px" }}></span>
+                <button className="btn bg-transparent border-warning-400 text-warning-400 rounded-round border-2 btn-icon" data-toggle="modal" data-target={"#popupRemoveModal" + row.id} title="Remove User">
+                    <i className="icon-bin"></i>
+                </button>
+                <div className="modal fade" id={"popupEditModal" + row.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                    <div className="modal-dialog modal-sm" role="document">
+                        <EditUserModal baseData={row} onEditUser={this.onUserEdited} />
+                    </div>
+                </div>
+                <div className="modal fade" id={"popupRemoveModal" + row.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                    <div className="modal-dialog modal-sm modal-notify modal-danger" role="document">
+                        <RemoveUserModal onDelete={this.onDeleteStaff} />
+                    </div>
+                </div>
+            </div>
+        
+        const tableColumns = [
+            { title: 'ID', prop: 'id'},
+            { title: 'Avatar', render: renderAvatar},
+            { title: 'Name', prop: 'name'},
+            { title: 'Phone', prop: 'phone'},
+            { title: 'Role', prop: 'role', render: renderRole},
+            { title: 'Action', render: renderAction}
+        ];
 
         return (
             <div className="card">
@@ -59,33 +130,15 @@ export class StaffList extends Component {
                     </div>
                     <div className="d-flex align-items-center mb-3 mb-sm-0">                      
                     </div>
-                    <div className="form-horizontal">
-                        <div className="form-group form-group-feedback form-group-feedback-right">
-                            <input type="search" className="form-control wmin-xl-300" placeholder="Search" />
-                            <div className="form-control-feedback text-black-50">
-                                <i className="icon-search4 font-size-lg"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="table-responsive">
-                        <table className="table table-hover table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Avatar</th>
-                                    <th>Name</th>
-                                    <th>Phone Number</th>
-                                    <th>Role</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {listStaff.map((item) => {
-                                    return <Staff key={item.id} onUserDeleted={this.onDeleteStaff} information={item} />
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
+                    <DataTable
+                        className="container"
+                        keys="id"
+                        columns={tableColumns}
+                        initialData={listStaff}
+                        initialPageLength={10}
+                        initialSortBy={{ prop: 'id', order: 'ascending' }}
+                        pageLengthOptions={[10, 20, 50]}
+                    />
                 </div>
             </div>
         );
@@ -280,15 +333,19 @@ export class EditUserModal extends Component {
     }
 
     onClickEditUser() {
+        console.log('onClickEditUser called')
         let data = {
             id: this.props.baseData.id,
             name: this.state.employeeName,
             phone: this.state.phoneNumber,
             role: this.state.role
         }
+        console.log(data)
         EmployeeServices.updateEmployee(data, (res) => {
             if (res.data.err === 0) {
-                this.props.onEditUser(res.data.data);
+                console.log('updateEmployee oke')
+                // this.props.onEditUser(res.data.data);
+                this.props.onEditUser();
             }
         });
     }
