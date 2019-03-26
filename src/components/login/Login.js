@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as LoginService from '../../app/services/login';
 
 export class Login extends Component {
     displayName = Login.name;
@@ -17,8 +18,12 @@ export class Login extends Component {
     }
 
     onLogin() {
-        if (this.state.username === 'thinhle' && this.state.password === 'thinhle') {
-            this.props.login();
+        if (this.state.username && this.state.password) {
+            LoginService.basicAuthentication(this.state.username, this.state.password, (res) => {
+                if (res.data.err === 0) {
+                    this.props.login();
+                }
+            });
         }
     }
 
