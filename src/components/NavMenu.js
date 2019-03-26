@@ -4,6 +4,15 @@ import { Link } from 'react-router-dom';
 export class NavMenu extends Component {
     displayName = NavMenu.name;
 
+    constructor(props) {
+        super(props);
+        this.onLoggedOut = this.onLoggedOut.bind(this);
+    }
+
+    onLoggedOut() {
+        this.props.logout();
+    }
+
     render() {
         return (
             <div className="navbar navbar-expand-md navbar-light fixed-top">
@@ -49,7 +58,7 @@ export class NavMenu extends Component {
                                 <span>User Name</span>
                             </a>
                             <div className="dropdown-menu dropdown-menu-right">
-                                <a href="#" className="dropdown-item"><i className="icon-switch2"></i> Logout</a>
+                                <button onClick={this.onLoggedOut} className="dropdown-item"><i className="icon-switch2"></i> Logout</button>
                             </div>
                         </li>
                     </ul>

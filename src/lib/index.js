@@ -1,3 +1,3 @@
 import './jquery';
-import './bootstrap';
+// import './bootstrap';
 import './font-awesome';
