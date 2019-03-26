@@ -110,7 +110,7 @@ export class ConveyorDetailModal extends Component {
     handleClickBtn(id) {
         let status = 0;
         if (id in [BtnNumber.CANCEL, BtnNumber.FINISH]) {
-            status = 0;
+            status = 1;
         } else if (id in [BtnNumber.RESUME]) {
             status = 2;
         }
@@ -273,7 +273,6 @@ export class NewInvoiceModal extends Component {
             parents: [],
             children: [],
             listSkuHandled: [],
-            tableRow: [],
             invoiceCode: '',
             staffId: 0,
             truckNumber: 0,
@@ -298,18 +297,19 @@ export class NewInvoiceModal extends Component {
     }
 
     addNewRow() {
-        let listRowTemp = this.state.tableRow;
-        let listRowData = this.state.invoiceDetailData;
-        listRowTemp.push(this.rowTemplate(this.state.listSkuHandled, listRowTemp.length));
+        let listRowData = this.state.invoiceDetailData.slice();
         listRowData.push({
-            invoiceCode: '',
             skuId: 0,
             target: 0
         });
         this.setState({
-            tableRow: listRowTemp,
             invoiceDetailData: listRowData
         });
+    }
+
+    onDeleteRow(deleteAt) {
+        let listRowData = this.state.invoiceDetailData.filter((value, index) => index !== deleteAt);
+        this.setState({invoiceDetailData: listRowData});
     }
 
     handleRawData() {
@@ -335,17 +335,19 @@ export class NewInvoiceModal extends Component {
         }
     }
 
-    rowTemplate(listSku, index) {
+    rowTemplate(item, index) {
         return (
             <div key={index} className="row">
                 <div className="col-4 align-self-items-center">
-                    <CategorySelectList onChange={this.onSkuSelected} index={index} listCategories={listSku} />
+                    <CategorySelectList onChange={this.onSkuSelected} index={index} selectedItem={item.skuId} listCategories={this.state.listSkuHandled} />
                 </div>
                 <div className="col-4 align-self-items-center">
-                    <input onChange={(e) => this.onTargetSet(e.target.value, index)} type="number" className="form-control" />
+                    <input onChange={(e) => this.onTargetSet(e.target.value, index)} value={item.target} type="number" className="form-control" />
                 </div>
-                <div className="col-4 align-self-items-center">
-                    
+                <div className="col-3 align-self-items-center">
+                </div>
+                <div className="col-1 align-self-items-center">
+                    <i onClick={() => this.onDeleteRow(index)} className="fa fa-trash cursor"></i>
                 </div>
             </div>
         );
@@ -356,7 +358,7 @@ export class NewInvoiceModal extends Component {
     }
 
     onSkuSelected(value, index) {
-        let listRowData = this.state.invoiceDetailData;
+        let listRowData = this.state.invoiceDetailData.slice();
         listRowData.forEach((item, itemIndex) => {
             if (itemIndex === index) {
                 item.skuId = Number.parseInt(value);
@@ -366,7 +368,7 @@ export class NewInvoiceModal extends Component {
     }
 
     onTargetSet(value, index) {
-        let listRowData = this.state.invoiceDetailData;
+        let listRowData = this.state.invoiceDetailData.slice();
         listRowData.forEach((item, itemIndex) => {
             if (itemIndex === index) {
                 item.target = Number.parseInt(value);
@@ -376,29 +378,28 @@ export class NewInvoiceModal extends Component {
     }
 
     onStart() {
+        let listInvoiceDetailData = [];
+        this.state.invoiceDetailData.forEach((item) => {
+            if (item.skuId && item.skuId > 0 && item.target && item.target >= 0) {
+                listInvoiceDetailData.push({
+                    sku_id: item.skuId,
+                    target: item.target
+                });
+            }
+        });
         let invoiceData = {
             code: this.state.invoiceCode,
-            conveyor_id: this.props.information.id,
+            conveyor_id: this.props.baseConveyorInfo.id,
             staff_id: this.state.staffId,
             truck_number: this.state.truckNumber,
-            status: 2
+            status: 2,
+            listInvoiceDetailData
         };
         DashBoardService.createNewConveyorDetail(invoiceData, (res) => {
             if (res.data.err === 0) {
-                let invoiceCode = res.data.data.code; // double check
                 toast(Message.DASHBOARD.CREATE_CONVEYOR_DETAIL_SUCCESS, {
                     type: toast.TYPE.SUCCESS,
                     autoClose: 2000
-                });
-                this.state.invoiceDetailData.forEach((item) => {
-                    if (item.sku_id && item.sku_id > 0 && item.target && item.target >= 0) {
-                        item.invoiceCode = invoiceCode;
-                        DashBoardService.createNewInvoiceDetail(item, (res1) => {
-                            if (res1.data.err === 0) {
-                                // handle success here
-                            }
-                        })
-                    }
                 });
             }
         });
@@ -409,8 +410,7 @@ export class NewInvoiceModal extends Component {
             && this.state.staffId && this.state.staffId > 0
             && this.state.truckNumber
             && this.state.invoiceDetailData && this.state.invoiceDetailData.length > 0
-            && this.state.invoiceDetailData[0].target && this.state.invoiceDetailData[0].target >= 0
-            && this.state.invoiceDetailData[0].skuId && this.state.invoiceDetailData[0].skuId > 0) {
+            && this.state.invoiceDetailData.every((item) => item.target && item.target >= 0 && item.skuId && item.skuId > 0)) {
                 return true;
         }
         return false;
@@ -459,18 +459,20 @@ export class NewInvoiceModal extends Component {
                             <div className="col-4 align-self-items-center">
                                 Target
                             </div>
-                            <div className="col-4 align-self-items-center">
+                            <div className="col-3 align-self-items-center">
                                 In
                             </div>
+                            <div className="col-1 align-self-items-center">
+                            </div>
                         </div>
-                        {this.state.tableRow.map((item) => {
-                            return item;
+                        {this.state.invoiceDetailData.map((item, index) => {
+                            return this.rowTemplate(item, index);
                         })}
                     </div>
                 </div>
                 <div className="modal-footer">
                     <div>
-                        <a role="button" href="#" className="btn btn-outline-dark btn-sm" onClick={() => this.addNewRow()}><i className="icon-plus2"></i> Add New</a>
+                        <button className="btn btn-outline-dark btn-sm" onClick={() => this.addNewRow()}><i className="icon-plus2"></i> Add New</button>
                     </div>
                 </div>
                 <div className="modal-footer">
@@ -488,14 +490,13 @@ export class EmployeeSelectList extends Component {
 
     constructor(props) {
         super(props);
-    }
-
-    state = {
-        selectedOption: null
+        this.state = {
+            selectedOption: null
+        };
     }
 
     onSelectEmployee = (selectedOption) => {
-        this.setState({ selectedOption })
+        this.setState({ selectedOption });
         this.props.onChange(selectedOption.value);
     }
 
@@ -503,20 +504,13 @@ export class EmployeeSelectList extends Component {
         const { selectedOption } = this.state;
         let { listEmployee } = this.props;
         let options = [];
-
-        options.push({
-            value: '0',
-            label: 'None'
-        })
-
         listEmployee.map((item) => {
             let option = {
                 value: item.id,
                 label: item.name
             }
-
             options.push(option);
-        })
+        });
 
         return (
             <Select value={selectedOption} options={options} onChange={this.onSelectEmployee}
@@ -538,10 +532,34 @@ export class CategorySelectList extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            selectedOption: null
+        }
     }
 
-    state = {
-        selectedOption: null
+    componentDidMount() {
+        let itemId = this.props.selectedItem;
+        let itemGot = this.props.listCategories.filter((item) => item.id === itemId);
+        if (itemGot && itemGot.length > 0) {
+            let defaultSelectedOption = {
+                value: itemGot[0].id,
+                label: itemGot[0].name
+            };
+            this.setState({selectedOption:defaultSelectedOption});
+        }
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (this.props.selectedItem !== newProps.selectedItem) {
+            let itemGot = this.props.listCategories.filter((item) => item.id === newProps.selectedItem);
+            if (itemGot && itemGot.length > 0) {
+                let defaultSelectedOption = {
+                    value: itemGot[0].id,
+                    label: itemGot[0].name
+                };
+                this.setState({selectedOption:defaultSelectedOption});
+            }
+        }
     }
 
     onSelectSku = (selectedOption) => {
@@ -553,20 +571,13 @@ export class CategorySelectList extends Component {
         const { selectedOption } = this.state;
         let { listCategories } = this.props;
         let options = [];
-
-        options.push({
-            value: '0',
-            label: 'None'
-        })
-
         listCategories.map((item) => {
             let option = {
                 value: item.id,
                 label: item.name
             };
-
             options.push(option);
-        })
+        });
 
         return (
             <Select value={selectedOption} options={options} onChange={this.onSelectSku}

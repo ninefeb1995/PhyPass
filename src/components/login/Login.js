@@ -9,6 +9,11 @@ export class Login extends Component {
             username: '',
             password: ''
         };
+        document.addEventListener('keypress', (e) => {
+            if (e.keyCode === 13) {
+                document.getElementById('btnLogin').click();
+            }
+        });
     }
 
     onLogin() {
@@ -52,7 +57,7 @@ export class Login extends Component {
                                 </div>
                             </div>
                             <div className="modal-footer justify-content-center">
-                                <button onClick={() => this.onLogin()} className="btn btn-primary rounded-round w-xl-50 w-md-50 w-sm-75 w-100" style={{border:'1px solid #2196f3'}}>Login</button>
+                                <button onClick={() => this.onLogin()} id="btnLogin" className="btn btn-primary rounded-round w-xl-50 w-md-50 w-sm-75 w-100" style={{border:'1px solid #2196f3'}}>Login</button>
                             </div>
                         </div>
                     </div>
