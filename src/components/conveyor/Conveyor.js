@@ -338,15 +338,15 @@ export class NewInvoiceModal extends Component {
     rowTemplate(item, index) {
         return (
             <div key={index} className="row">
-                <div className="col-4 align-self-items-center">
+                <div className="col-4">
                     <CategorySelectList onChange={this.onSkuSelected} index={index} selectedItem={item.skuId} listCategories={this.state.listSkuHandled} />
                 </div>
-                <div className="col-4 align-self-items-center">
+                <div className="col-4">
                     <input onChange={(e) => this.onTargetSet(e.target.value, index)} value={item.target} type="number" className="form-control" />
                 </div>
-                <div className="col-3 align-self-items-center">
+                <div className="col-3">
                 </div>
-                <div className="col-1 align-self-items-center">
+                <div className="col-1 icon-trash-center">
                     <i onClick={() => this.onDeleteRow(index)} className="fa fa-trash cursor"></i>
                 </div>
             </div>
@@ -453,16 +453,16 @@ export class NewInvoiceModal extends Component {
                     </div>
                     <div className="container-fluid">
                         <div className="align-content-center bg-dark-alpha row" style={{height: "30px"}}>
-                            <div className="col-4 align-self-items-center">
+                            <div className="col-4">
                                 Name
                             </div>
-                            <div className="col-4 align-self-items-center">
+                            <div className="col-4">
                                 Target
                             </div>
-                            <div className="col-3 align-self-items-center">
+                            <div className="col-3">
                                 In
                             </div>
-                            <div className="col-1 align-self-items-center">
+                            <div className="col-1">
                             </div>
                         </div>
                         {this.state.invoiceDetailData.map((item, index) => {
