@@ -44,13 +44,15 @@ export const updateConveyorDetail = async (data, callback) => {
 };
 
 export const createNewConveyorDetail = async (data, callback) => {
+    let jsonData = JSON.stringify(data.listInvoiceDetailData);
     let res = await axios.get(Config.getPath('invoice/add'), {
         params: {
             code: data.code,
             conveyor_id: data.conveyor_id,
             staff_id: data.staff_id,
             truck_number: data.truck_number,
-            status: 1
+            status: 1,
+            data: jsonData
         }
     });
     callback(res);
