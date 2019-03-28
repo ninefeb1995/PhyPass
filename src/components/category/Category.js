@@ -133,8 +133,12 @@ export class Category extends Component {
                     </div>
                 </div>
                 <ul className="nav nav-group-sub" style={{display: this.state.toggle? "block" : ""}}>
-                    {information.children.map((item) => {
-                        return <SubCategory listParents={this.props.listParents} key={item.id} information={item} onCategoryEditedAnnouce={this.onCategoryEdited} />;
+                    {information.children.map((item, index) => {
+                        let isOdd = true;
+                        if (index % 2 === 0) {
+                            isOdd = false;
+                        }
+                        return <SubCategory listParents={this.props.listParents} key={item.id} information={item} onCategoryEditedAnnouce={this.onCategoryEdited} isOdd={isOdd} />;
                     })}
                 </ul>
             </li>
@@ -155,11 +159,11 @@ export class SubCategory extends Component {
     }
 
     render() {
-        const { information } = this.props;
+        const { information, isOdd } = this.props;
 
         return (
-            <li className="nav-item">
-                <span className="nav-link">
+            <li>
+                <span className={isOdd ? "nav-link" : "nav-link striped-sku-children-list"}>
                     {information.name}
                     <i data-toggle="modal" data-target={"#popupEditModal"+information.id} className="fa fa-edit margin-left-10 cursor"></i>                   
                 </span>
@@ -209,6 +213,13 @@ export class NewCategoryFormModal extends Component {
                 this.props.onCreatedCategory(res.data.data);
             }
         });
+    }
+
+    isValidData() {
+        if (this.state.categoryName.trim() !== '') {
+                return true;
+        }
+        return false;
     }
 
     render() {
@@ -261,7 +272,7 @@ export class NewCategoryFormModal extends Component {
                     </div>
                 </div>
                 <div className="modal-footer">
-                    <button onClick={() => this.onCreateNewCategory()} data-dismiss="modal" className="btn btn-success btn-sm">Done</button>
+                    <button onClick={() => this.onCreateNewCategory()} disabled={!this.isValidData()} data-dismiss="modal" className="btn btn-success btn-sm">Done</button>
                 </div>             
             </div>
         );
@@ -329,6 +340,13 @@ export class EditCategoryFormModal extends Component {
         }
     }
 
+    isValidData() {
+        if (this.state.categoryName.trim() !== '') {
+                return true;
+        }
+        return false;
+    }
+
     render() {
         const { selectedOption } = this.state;
         const { listParents } = this.props;
@@ -380,7 +398,7 @@ export class EditCategoryFormModal extends Component {
                     </div>
                 </div>
                 <div className="modal-footer">
-                    <button onClick={(e) => this.onEditCategory(e)} data-dismiss="modal" className="btn btn-success btn-sm">Done</button>
+                    <button onClick={(e) => this.onEditCategory(e)} disabled={!this.isValidData()} data-dismiss="modal" className="btn btn-success btn-sm">Done</button>
                 </div>             
             </div>
         );
