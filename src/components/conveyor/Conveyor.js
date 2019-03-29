@@ -245,8 +245,8 @@ export class ButtonField extends Component {
                 return (
                    <div>
                         <button /*disabled={this.state.isToggle}*/ onClick={() => this.onToggle()} className="btn btn-danger">
-                        <span style={{marginRight:"5px"}}>Cancel</span>
-                        <span><i className="fa fa-caret-down"></i></span>
+                            <span style={{marginRight:"5px"}}>Cancel</span>
+                            <span><i className="fa fa-caret-down"></i></span>
                         </button>
                         <ul className={this.state.isToggle ? "cancelReason display-block" : "cancelReason"} id={"cancelReason"+btnId}>
                             <li className="margin-bottom-5">
@@ -267,11 +267,25 @@ export class ButtonField extends Component {
             case 4:
                 return (
                     <div className="">
-                        <button onClick={() => this.onClickBtn(BtnNumber.CANCEL)} className="btn btn-danger" style={{ margin: "0.25rem", marginLeft: 0 }}>
+                        <button onClick={() => this.onToggle()} className="btn btn-danger" style={{ margin: "0.25rem", marginLeft: 0 }}>
                             <span style={{marginRight:"5px"}}>Cancel</span>
                             <span><i className="fa fa-caret-down"></i></span>
                         </button>
-                        <button onClick={() => this.onClickBtn(BtnNumber.RESUME)} className="btn btn-success" data-dismiss="modal" style={{ margin: "0.25rem", marginRight: 0 }}>Resume</button>
+                        <button disabled={this.state.isToggle} onClick={() => this.onClickBtn(BtnNumber.RESUME)} className="btn btn-success" data-dismiss="modal" style={{ margin: "0.25rem", marginRight: 0 }}>Resume</button>
+                        <ul className={this.state.isToggle ? "cancelReason display-block" : "cancelReason"} id={"cancelReason"+btnId}>
+                            <li className="margin-bottom-5">
+                                <span>Are you sure you want to cancel the progress of this conveyor?</span>
+                            </li>
+                            <li>
+                                <form name="calcelReasonForm">
+                                    <textarea onChange={(e) => this.setState({cancelReason:e.target.value})} className="form-control" rows="3" placeholder="Please input your reason here..."></textarea>
+                                </form>
+                            </li>
+                            <li style={{textAlign: "right", paddingTop: "10px"}}>
+                                <button onClick={() => this.onClickBtn(BtnNumber.CANCEL)} disabled={this.state.cancelReason.trim() === ''} className="btn btn-primary" data-dismiss="modal" style={{ margin: "0.25rem", marginLeft: 0 }}>OK</button>
+                                {/* <button onClick={() => this.onToggle()} className="btn btn-default" style={{ margin: "0.25rem", marginRight: 0 }}>Close</button> */}
+                            </li>
+                        </ul>
                     </div>
                 );
             case 8:
