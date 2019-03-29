@@ -55,7 +55,6 @@ export class Conveyor extends Component {
                         </div>
                     </div>
                 </div>
-
                 <div className="modal fade" id={"popupModal"+information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                     <div className="modal-dialog modal-lg" role="document">
                         <Modal information = {information}/>
@@ -108,7 +107,7 @@ export class ConveyorDetailModal extends Component {
         });
     }
 
-    handleClickBtn(id) {
+    handleClickBtn(id, reason) {
         let status = 0;
         if (id in [BtnNumber.CANCEL, BtnNumber.FINISH]) {
             status = 1;
@@ -120,7 +119,8 @@ export class ConveyorDetailModal extends Component {
             conveyor_id: this.state.conveyorDetail.conveyor.id,
             staff_id: this.state.conveyorDetail.staff.id,
             truck_number: this.state.conveyorDetail.truck_number,
-            status
+            status,
+            reason
         };
         DashBoardService.updateConveyorDetail(data, (res) => {
             if (res.data.err === 0) {
@@ -202,7 +202,7 @@ export class ConveyorDetailModal extends Component {
                         pageLengthOptions={[10, 20, 50]}
                     />
                 </div>
-                <ButtonField status={this.state.conveyorDetail.status} onClick={this.handleClickBtn} />
+                <ButtonField buttonId={this.state.conveyorDetail.id} status={this.state.conveyorDetail.status} onClick={this.handleClickBtn} />
             </div>
             : <div></div>
         );
@@ -214,29 +214,59 @@ export class ButtonField extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            cancelReason: '',
+            isToggle: false
+        }
+    }
+
+    onToggle() {
+        let isToggle = !this.state.isToggle;
+        this.setState({isToggle});
     }
 
     onClickBtn(id) {
-        this.props.onClick(id);
+        this.props.onClick(id, this.state.cancelReason);
     }
 
-    renderButtonField(status) {
+    renderButtonField(status, btnId) {
         switch (status)
         {
             default:
                 return (
-                    <div className="">
-                        
+                    <div className="">                   
                     </div>
                 );
             case 2:
                 return (
-                    <button onClick={() => this.onClickBtn(BtnNumber.CANCEL)} className="btn btn-danger" data-dismiss="modal">Cancel</button>
+                   <div>
+                        <button /*disabled={this.state.isToggle}*/ onClick={() => this.onToggle()} className="btn btn-danger">
+                        <span style={{marginRight:"5px"}}>Cancel</span>
+                        <span><i className="fa fa-caret-down"></i></span>
+                        </button>
+                        <ul className={this.state.isToggle ? "cancelReason display-block" : "cancelReason"} id={"cancelReason"+btnId}>
+                            <li className="margin-bottom-5">
+                                <span>Are you sure you want to cancel the progress of this conveyor?</span>
+                            </li>
+                            <li>
+                                <form name="calcelReasonForm">
+                                    <textarea onChange={(e) => this.setState({cancelReason:e.target.value})} className="form-control" rows="3" placeholder="Please input your reason here..."></textarea>
+                                </form>
+                            </li>
+                            <li style={{textAlign: "right", paddingTop: "10px"}}>
+                                <button onClick={() => this.onClickBtn(BtnNumber.CANCEL)} disabled={this.state.cancelReason.trim() === ''} className="btn btn-primary" data-dismiss="modal" style={{ margin: "0.25rem", marginLeft: 0 }}>OK</button>
+                                {/* <button onClick={() => this.onToggle()} className="btn btn-default" style={{ margin: "0.25rem", marginRight: 0 }}>Close</button> */}
+                            </li>
+                        </ul>
+                   </div>
                 );
             case 4:
                 return (
                     <div className="">
-                        <button onClick={() => this.onClickBtn(BtnNumber.CANCEL)} className="btn btn-danger" data-dismiss="modal" style={{ margin: "0.25rem", marginLeft: 0 }}>Cancel</button>
+                        <button onClick={() => this.onClickBtn(BtnNumber.CANCEL)} className="btn btn-danger" style={{ margin: "0.25rem", marginLeft: 0 }}>
+                            <span style={{marginRight:"5px"}}>Cancel</span>
+                            <span><i className="fa fa-caret-down"></i></span>
+                        </button>
                         <button onClick={() => this.onClickBtn(BtnNumber.RESUME)} className="btn btn-success" data-dismiss="modal" style={{ margin: "0.25rem", marginRight: 0 }}>Resume</button>
                     </div>
                 );
@@ -248,11 +278,11 @@ export class ButtonField extends Component {
     }
 
     render () {
-        const status = this.props.status;
+        const { status, buttonId } = this.props;
 
         return (
             <div className="modal-footer">
-                {this.renderButtonField(status)}
+                {this.renderButtonField(status, buttonId)}
             </div>
         );
     }
@@ -269,6 +299,7 @@ export class NewInvoiceModal extends Component {
             parents: [],
             children: [],
             listSkuHandled: [],
+            listSkuHidden: [],
             invoiceCode: '',
             staffId: 0,
             truckNumber: 0,
@@ -279,7 +310,7 @@ export class NewInvoiceModal extends Component {
     }
 
     componentDidMount() {
-        EmployeeService.getListEmployee(1, 50, (res) => {
+        EmployeeService.getListEmployee(1, 50, 1, (res) => {
             if (res.data.err === 0) {
                 this.setState({listEmployee: res.data.data});               
             }
@@ -304,17 +335,29 @@ export class NewInvoiceModal extends Component {
     }
 
     onDeleteRow(deleteAt) {
+        let skuPutBack = this.state.listSkuHidden.find((item) => item.id === this.state.invoiceDetailData[deleteAt].skuId);
+        let listSkuOut = this.state.listSkuHidden.filter((item) => item.id !== skuPutBack.id);
+        let listSkuHandled = this.state.listSkuHandled.slice();
+        listSkuHandled.forEach((item) => {
+            if (item.id === skuPutBack.id) {
+                item.hidden = false;
+            }
+        });
         let listRowData = this.state.invoiceDetailData.filter((value, index) => index !== deleteAt);
-        this.setState({invoiceDetailData: listRowData});
+        this.setState({invoiceDetailData: listRowData, listSkuHidden: listSkuOut, listSkuHandled});
     }
 
     handleRawData() {
         if(this.state.listSkusRaw) {
             let parents = this.state.listSkusRaw.filter((item) => item.parentId === 0);
             let children = this.state.listSkusRaw.filter((item) => item.parentId !== 0);
-            parents.forEach((item) => item.children = []);
+            parents.forEach((parent) => {
+                parent.children = [];
+                parent.hidden = false;
+            });
             children.forEach((child) => {
                 let parentAt = 0;
+                child.hidden = false;
                 if (parents.some((parent, index) => {
                     let testResult = parent.id === child.parentId;
                     if (testResult) {
@@ -360,7 +403,18 @@ export class NewInvoiceModal extends Component {
                 item.skuId = Number.parseInt(value);
             }
         });
-        this.setState({invoiceDetailData: listRowData});
+        let skuOutItems = this.state.listSkuHandled.filter((item) => {
+            return listRowData.some((item1) => item.id === item1.skuId);
+        });
+        let listSkuHandled = this.state.listSkuHandled.slice();
+        listSkuHandled.forEach((item) => {
+            if (listRowData.some((item1) => item.id === item1.skuId)) {
+                item.hidden = true;
+            } else {
+                item.hidden = false;
+            }
+        });
+        this.setState({invoiceDetailData: listRowData, listSkuHidden: skuOutItems, listSkuHandled});
     }
 
     onTargetSet(value, index) {
@@ -566,8 +620,9 @@ export class CategorySelectList extends Component {
     render () {
         const { selectedOption } = this.state;
         let { listCategories } = this.props;
+        let listCategoriesFiltered = listCategories.filter((item) => !item.hidden);
         let options = [];
-        listCategories.map((item) => {
+        listCategoriesFiltered.map((item) => {
             let option = {
                 value: item.id,
                 label: item.name
