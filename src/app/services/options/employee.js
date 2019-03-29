@@ -1,11 +1,12 @@
 import axios from 'axios';
 import * as Config from '../../config';
 
-export const getListEmployee = async (pageNumber, pageSize, callback) => {
+export const getListEmployee = async (pageNumber, pageSize, showFree = 0, callback) => {
     let res = await axios.get(Config.getPath('staff/getlist'), {
         params: {
             p: pageNumber,
-            c: pageSize
+            c: pageSize,
+            showFree: showFree
         }
     });
     callback(res);

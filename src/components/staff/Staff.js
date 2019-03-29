@@ -16,7 +16,7 @@ export class StaffList extends Component {
     }
 
     componentWillMount() {
-        EmployeeServices.getListEmployee(1, 50, (res) => {
+        EmployeeServices.getListEmployee(1, 50, 0, (res) => {
             if (res.data.err === 0) {
                 this.setState({listStaff: res.data.data});
             }
@@ -68,7 +68,7 @@ export class StaffList extends Component {
                         </div>
                     </div>
                     <div className="table-responsive">
-                        <table className="table table-hover table-bordered">
+                        <table className="table table-hover table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -211,6 +211,14 @@ export class CreateUserModal extends Component {
         });
     }
 
+    isValidData() {
+        if (this.state.employeeName.trim() !== ''
+            && this.state.phoneNumber.trim() !== '') {
+                return true;
+        }
+        return false;
+    }
+
     render() {
         return (
             <div className="modal-content">
@@ -251,7 +259,7 @@ export class CreateUserModal extends Component {
                         <button onClick={() => this.setState({employeeName: '',phoneNumber: '',role: 1})} data-dismiss="modal" className="btn btn-secondary btn-sm">Cancel</button>
                     </div>
                     <div>
-                        <button onClick={() => this.onClickCreateUser()} data-dismiss="modal" className="btn btn-success btn-sm">Create User</button>
+                        <button onClick={() => this.onClickCreateUser()} disabled={!this.isValidData()} data-dismiss="modal" className="btn btn-success btn-sm">Create User</button>
                     </div>
                 </div>             
             </div>
@@ -291,6 +299,14 @@ export class EditUserModal extends Component {
                 this.props.onEditUser(res.data.data);
             }
         });
+    }
+    
+    isValidData() {
+        if (this.state.employeeName.trim() !== ''
+            && this.state.phoneNumber.trim() !== '') {
+                return true;
+        }
+        return false;
     }
 
     render() {
@@ -333,7 +349,7 @@ export class EditUserModal extends Component {
                         <button data-dismiss="modal" className="btn btn-secondary">Cancel</button>
                     </div>
                     <div>
-                        <button onClick={() => this.onClickEditUser()} data-dismiss="modal" className="btn btn-success">Edit User</button>
+                        <button onClick={() => this.onClickEditUser()} disabled={!this.isValidData()} data-dismiss="modal" className="btn btn-success">Edit User</button>
                     </div>
                 </div>             
             </div>
