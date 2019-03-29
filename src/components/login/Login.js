@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import * as LoginService from '../../app/services/login';
+import Message from '../../app/constants/message';
 
 export class Login extends Component {
     displayName = Login.name;
@@ -7,7 +9,9 @@ export class Login extends Component {
         super(props);
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            errorMessage: Message.LOGIN.WRONG_AUTHENTICATION,
+            isError: false
         };
         document.addEventListener('keypress', (e) => {
             if (e.keyCode === 13) {
@@ -17,8 +21,15 @@ export class Login extends Component {
     }
 
     onLogin() {
-        if (this.state.username === 'thinhle' && this.state.password === 'thinhle') {
-            this.props.login();
+        if (this.state.username && this.state.password) {
+            LoginService.basicAuthentication(this.state.username, this.state.password, (res) => {
+                if (res.data.err === 0) {
+                    this.setState({isError: false});
+                    this.props.login();
+                } else {
+                    this.setState({isError: true});
+                }
+            });
         }
     }
 
@@ -55,6 +66,11 @@ export class Login extends Component {
                                         </div>
                                     </div>
                                 </div>
+                                {this.state.isError ? 
+                                <div className="login-error-message">
+                                <span>{this.state.errorMessage}</span>
+                                </div>: null}
+                                
                             </div>
                             <div className="modal-footer justify-content-center">
                                 <button onClick={() => this.onLogin()} id="btnLogin" className="btn btn-primary rounded-round w-xl-50 w-md-50 w-sm-75 w-100" style={{border:'1px solid #2196f3'}}>Login</button>
