@@ -151,3 +151,9 @@ body {
 .display-block {
     display: block;
 }
+
+.login-error-message {
+    padding: 0 3.75rem;
+    text-align: center;
+    color: red;
+}

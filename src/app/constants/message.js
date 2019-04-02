@@ -11,6 +11,9 @@ const Message = {
     DASHBOARD: {
         UPDATE_STATUS_SUCCESS: 'Conveyor status has been updated',
         CREATE_CONVEYOR_DETAIL_SUCCESS: 'Creating conveyor detail successfully'
+    },
+    LOGIN: {
+        WRONG_AUTHENTICATION: '* Wrong username or password'
     }
 };
 
