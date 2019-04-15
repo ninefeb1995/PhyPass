@@ -108,9 +108,9 @@ export class ConveyorDetailModal extends Component {
 
     handleClickBtn(id, reason) {
         let status = 0;
-        if (id in [BtnNumber.CANCEL, BtnNumber.FINISH]) {
+        if ([BtnNumber.CANCEL, BtnNumber.FINISH].some((x) => x === id)) {
             status = 1;
-        } else if (id in [BtnNumber.RESUME]) {
+        } else if ([BtnNumber.RESUME].some((x) => x === id)) {
             status = 2;
         }
         let data = {
