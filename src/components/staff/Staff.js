@@ -3,7 +3,6 @@ import * as EmployeeServices from '../../app/services/options/employee';
 import { toast } from 'react-toastify';
 import Message from '../../app/constants/message';
 import { DataTable } from 'react-data-components';
-//import 'react-data-components/css/table-twbs.css'
 
 export class StaffList extends Component {
     displayName = StaffList.name;
@@ -18,7 +17,7 @@ export class StaffList extends Component {
     }
 
     componentWillMount() {
-        EmployeeServices.getListEmployee(1, 50, (res) => {
+        EmployeeServices.getListEmployee(1, 50, 0, (res) => {
             if (res.data.err === 0) {
                 this.setState({listStaff: res.data.data});
             }
@@ -27,6 +26,8 @@ export class StaffList extends Component {
 
     userCreated(data) {
         if (data) {
+            console.log(data)
+            console.log(this.state)
             const temp = this.state.listStaff.slice();
             temp.push(data);
             this.setState({listStaff: temp});
@@ -37,10 +38,14 @@ export class StaffList extends Component {
         }
     }
 
-    onUserEdited() {
+    onUserEdited(data) {
 
         console.log('onUserEdited alert')
-        //this.setState({information:data});
+        console.log('data onUserEdited')
+        console.log(data)
+        if(data) {
+
+        }
         toast(Message.Employee.UPDATE_SUCCESS, {
             type: toast.TYPE.SUCCESS,
             autoClose: 2000
@@ -77,6 +82,8 @@ export class StaffList extends Component {
     }
 
     render() {
+        console.log('state of stafflist:')
+        console.log(this.state)
         const { listStaff } = this.state;
 
         const renderAvatar = (val, row) =>
@@ -131,7 +138,6 @@ export class StaffList extends Component {
                     <div className="d-flex align-items-center mb-3 mb-sm-0">                      
                     </div>
                     <DataTable
-                        className="container"
                         keys="id"
                         columns={tableColumns}
                         initialData={listStaff}
@@ -197,7 +203,8 @@ export class Staff extends Component {
 
     render() {
         const { information } = this.state;
-        
+        console.log('state of stafflist:')
+        console.log(this.state)
         return (
             <tr>
                 <td>
@@ -264,7 +271,17 @@ export class CreateUserModal extends Component {
         });
     }
 
+    isValidData() {
+        if (this.state.employeeName.trim() !== ''
+            && this.state.phoneNumber.trim() !== '') {
+                return true;
+        }
+        return false;
+    }
+
     render() {
+        console.log('state of CreateUserModal:')
+        console.log(this.state)
         return (
             <div className="modal-content">
                 <div className="modal-header bg-green">
@@ -304,7 +321,7 @@ export class CreateUserModal extends Component {
                         <button onClick={() => this.setState({employeeName: '',phoneNumber: '',role: 1})} data-dismiss="modal" className="btn btn-secondary btn-sm">Cancel</button>
                     </div>
                     <div>
-                        <button onClick={() => this.onClickCreateUser()} data-dismiss="modal" className="btn btn-success btn-sm">Create User</button>
+                        <button onClick={() => this.onClickCreateUser()} disabled={!this.isValidData()} data-dismiss="modal" className="btn btn-success btn-sm">Create User</button>
                     </div>
                 </div>             
             </div>
@@ -325,11 +342,15 @@ export class EditUserModal extends Component {
     }
 
     componentWillMount() {
+        console.log('baseData in componentWillMount:')
+        console.log(this.props.baseData)
         this.setState({
             employeeName: this.props.baseData.name,
             phoneNumber: this.props.baseData.phone,
             role: this.props.baseData.role
         });
+        console.log('state of componentWillMount:')
+        console.log(this.state)
     }
 
     onClickEditUser() {
@@ -343,14 +364,36 @@ export class EditUserModal extends Component {
         console.log(data)
         EmployeeServices.updateEmployee(data, (res) => {
             if (res.data.err === 0) {
+                
                 console.log('updateEmployee oke')
+                console.log(res.data.data)
                 // this.props.onEditUser(res.data.data);
-                this.props.onEditUser();
+                this.props.onEditUser(res.data.data);
             }
         });
     }
+    
+    isValidData() {
+        if (this.state.employeeName.trim() !== ''
+            && this.state.phoneNumber.trim() !== '') {
+                return true;
+        }
+        return false;
+    }
 
     render() {
+        console.log('this.props.baseData:')
+        console.log(this.props.baseData)
+        //const beingEdittedStaff = this.props.baseData;
+        //console.log('state of EditUserModal:')
+        //console.log(this.state)
+        // this.setState({
+        //     employeeName: this.props.baseData.name,
+        //     phoneNumber: this.props.baseData.phone,
+        //     role: this.props.baseData.role
+        // });
+        // console.log('state of EditUserModal after:')
+        // console.log(this.state)
         return (
             <div className="modal-content">
                 <div className="modal-header bg-green-800">
@@ -390,7 +433,7 @@ export class EditUserModal extends Component {
                         <button data-dismiss="modal" className="btn btn-secondary">Cancel</button>
                     </div>
                     <div>
-                        <button onClick={() => this.onClickEditUser()} data-dismiss="modal" className="btn btn-success">Edit User</button>
+                        <button onClick={() => this.onClickEditUser()} disabled={!this.isValidData()} data-dismiss="modal" className="btn btn-success">Edit User</button>
                     </div>
                 </div>             
             </div>

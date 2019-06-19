@@ -37,7 +37,8 @@ export const updateConveyorDetail = async (data, callback) => {
             conveyor_id: data.conveyor_id,
             staff_id: data.staff_id,
             truck_number: data.truck_number,
-            status: data.status
+            status: data.status,
+            note: data.reason
         }
     });
     callback(res);

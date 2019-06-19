@@ -69,7 +69,11 @@ a.waves-light {
     margin-left: 10px;
 }
 
-.css-1oubc3t {
+.margin-bottom-5 {
+    margin-bottom: 5px;
+}
+
+.css-1oubc3t{
     background-clip: border-box !important;
     border-width: 1px 0 !important;
     border-top-color: transparent!important;
@@ -109,4 +113,47 @@ body {
 .icon-trash-center {
     text-align: center;
     line-height: 35px;
+}
+
+.thead-pagination {
+    background-color: rgba(0,0,0,.2);
+}
+
+.striped-sku-children-list {
+    background-color: #eeeeee;
+}
+
+.cancelReason {
+    right: 0;
+    min-width: 350px;
+    padding: 10px;
+    position: absolute;
+    top: 100%;
+    z-index: 1000;
+    display: none;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+
+.display-block {
+    display: block;
+}
+
+.login-error-message {
+    padding: 0 3.75rem;
+    text-align: center;
+    color: red;
 }
