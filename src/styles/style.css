@@ -16,7 +16,7 @@
 
 .custom-card {
     min-width: 100%;
-    height: 290px
+    height: 290px;
 }
 
 .custom-card-content {
@@ -44,7 +44,8 @@
     font-size: 2.25003rem;
 }
 
-a.waves-effect, a.waves-light {
+a.waves-effect,
+a.waves-light {
     display: inline-block;
 }
 
@@ -72,10 +73,10 @@ a.waves-effect, a.waves-light {
     margin-bottom: 5px;
 }
 
-.css-1oubc3t{
+.css-1oubc3t {
     background-clip: border-box !important;
     border-width: 1px 0 !important;
-    border-top-color: transparent!important;
+    border-top-color: transparent !important;
 }
 
 .cursor {
@@ -128,4 +129,23 @@ body {
     padding: 0 3.75rem;
     text-align: center;
     color: red;
+}
+
+.height-100 {
+    height: 100px;
+}
+
+.progress {
+    height: 1rem;
+    margin-bottom: 0.125rem;
+}
+
+.progress-label {
+    color: black;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }

@@ -12,6 +12,10 @@ export class Conveyor extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            modalClick: 0
+        };
     }
 
     getBgColorClassName(status) {
@@ -29,16 +33,39 @@ export class Conveyor extends Component {
         }
     }
 
+    getBgColorForProgressBar(index) {
+        switch (index) {
+            case 0:
+                return '#e89343';
+            case 1:
+                return '#b1e843';
+            case 2:
+                return '#61f7ff';
+            case 3:
+                return '#ff82fd';
+            case 4:
+                return '#ff5252';
+        }
+    }
+
     render() {
         const { information } = this.props;
 
         return (
             <div className="card custom-card">
-                <div className={"card-body " + this.getBgColorClassName(information.status)} data-toggle="modal" data-target={"#popupModal" + information.id} style={{ cursor: 'pointer' }}>
-                    <div className="d-flex jc-center">
-                        <div className="btn rounded-round btn-xl bg-white">
-                            {Number((information.stats * 100).toFixed(0))}%
-                        </div>
+                <div className={"card-body " + this.getBgColorClassName(information.status)}
+                    data-toggle="modal" data-target={"#popupModal" + information.id}
+                    onClick={() => this.setState({ modalClick: this.state.modalClick + 1 })}
+                    style={{ cursor: 'pointer' }}>
+                    <div className="height-100">
+                        {this.props.information.details && this.props.information.details.slice(0, 5).map((item, index) => {
+                            let percentage = (item.currentQuantity / item.targetQuantity * 100).toFixed() + '%';
+                            return <div className="progress">
+                                <div className="progress-label">{percentage}</div>
+                                <div className="progress-bar" style={{ width: percentage, backgroundColor: this.getBgColorForProgressBar(index) }}>
+                                </div>
+                            </div>
+                        })}
                     </div>
                     <div className="card-content custom-card-content bg-white">
                         <div className="ta-center">
@@ -56,7 +83,7 @@ export class Conveyor extends Component {
                 </div>
                 <div className="modal fade" id={"popupModal" + information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                     <div className="modal-dialog modal-lg" role="document">
-                        <Modal information={information} />
+                        <Modal information={information} modalClick={this.state.modalClick} />
                     </div>
                 </div>
             </div>
@@ -77,7 +104,7 @@ export class Modal extends Component {
         }
         else {
             return (
-                <ConveyorDetailModal baseConveyorInfo={information} />
+                <ConveyorDetailModal modalClick={this.props.modalClick} baseConveyorInfo={information} />
             );
         }
     }
@@ -106,7 +133,8 @@ export class ConveyorDetailModal extends Component {
     }
 
     componentWillReceiveProps(newProps) {
-        if (this.props.baseConveyorInfo.status !== newProps.baseConveyorInfo.status) {
+        if (this.props.baseConveyorInfo.status !== newProps.baseConveyorInfo.status
+            || newProps.modalClick !== this.state.modalClick) {
             DashBoardService.getInvoiceDetail(newProps.baseConveyorInfo.invoiceCode, (res) => {
                 if (res.data.err === 0) {
                     this.setState({
@@ -200,15 +228,19 @@ export class ConveyorDetailModal extends Component {
                             <table className="table table-hover table-bordered">
                                 <thead className="theme_bar theme_bar_sm theme_bar_lg">
                                     <tr>
-                                        <th>Name</th>
+                                        <th>No</th>
+                                        <th>Product</th>
+                                        <th>Size</th>
                                         <th>Target</th>
-                                        <th>In</th>
+                                        <th>Actual</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {this.state.conveyorDetail.details.map((value) => {
+                                    {this.state.conveyorDetail.details.map((value, index) => {
                                         return <tr key={value.skuId}>
+                                            <td>{index + 1}</td>
                                             <td>{value.skuId}</td>
+                                            <td>{value.size}</td>
                                             <td>{value.targetQuantity}</td>
                                             <td>{value.currentQuantity}</td>
                                         </tr>
@@ -538,7 +570,7 @@ export class NewInvoiceModal extends Component {
                                 Target
                             </div>
                             <div className="col-3">
-                                In
+                                Actual
                             </div>
                             <div className="col-1">
                             </div>
