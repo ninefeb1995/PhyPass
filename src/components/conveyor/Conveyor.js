@@ -58,14 +58,20 @@ export class Conveyor extends Component {
                     onClick={() => this.setState({ modalClick: this.state.modalClick + 1 })}
                     style={{ cursor: 'pointer' }}>
                     <div className="height-100">
-                        {this.props.information.details && this.props.information.details.slice(0, 5).map((item, index) => {
-                            let percentage = (item.currentQuantity / item.targetQuantity * 100).toFixed() + '%';
-                            return <div className="progress">
-                                <div className="progress-label">{percentage}</div>
-                                <div className="progress-bar" style={{ width: percentage, backgroundColor: this.getBgColorForProgressBar(index) }}>
+                        <div className="width-75">
+                            {this.props.information.details && this.props.information.details.slice(0, 5).map((item, index) => {
+                                let percentage = (item.currentQuantity / item.targetQuantity * 100).toFixed() + '%';
+                                return <div className="progress-container">
+                                    <div className="progress-id">{item.skuId}</div>
+                                    <div className="progress">
+                                        <div className="progress-bar" style={{ width: percentage, backgroundColor: this.getBgColorForProgressBar(index) }}>
+                                            {item.currentQuantity}
+                                        </div>
+                                    </div>
+                                    <div className="progress-label">{item.targetQuantity}</div>
                                 </div>
-                            </div>
-                        })}
+                            })}
+                        </div>
                     </div>
                     <div className="card-content custom-card-content bg-white">
                         <div className="ta-center">

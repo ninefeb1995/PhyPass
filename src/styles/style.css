@@ -135,17 +135,42 @@ body {
     height: 100px;
 }
 
-.progress {
-    height: 1rem;
-    margin-bottom: 0.125rem;
-}
-
-.progress-label {
-    color: black;
+.width-75 {
     position: absolute;
     left: 0;
     right: 0;
     margin-left: auto;
     margin-right: auto;
-    text-align: center;
+    width: 75%;
+}
+
+.progress {
+    height: 1rem;
+    margin-bottom: 0.125rem;
+    flex-grow: 1;
+}
+
+.progress-container {
+    display: flex;
+    position: relative;
+}
+
+.progress-label {
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    right: -30px;
+    bottom: 0;
+}
+
+.progress-id {
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    left: -20px;
+    bottom: 0;
+}
+
+.card-body {
+    border-radius: 5px;
 }
