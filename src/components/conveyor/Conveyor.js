@@ -246,7 +246,7 @@ export class ConveyorDetailModal extends Component {
                                         return <tr key={value.skuId}>
                                             <td>{index + 1}</td>
                                             <td>{value.skuId}</td>
-                                            <td>{value.size}</td>
+                                            <td>{value.info}</td>
                                             <td>{value.targetQuantity}</td>
                                             <td>{value.currentQuantity}</td>
                                         </tr>

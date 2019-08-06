@@ -187,7 +187,7 @@ export class NewCategoryFormModal extends Component {
         this.state = {
             categoryId: '',
             categoryName: '',
-            size: 0,
+            info: 0,
             parentId: 0,
             selectedOption: {
                 value: '0',
@@ -205,7 +205,7 @@ export class NewCategoryFormModal extends Component {
     }
 
     updateSizeValue(event) {
-        this.setState({ size: event.target.value });
+        this.setState({ info: event.target.value });
     }
 
     updateParentIdValue(selectedOption) {
@@ -220,7 +220,7 @@ export class NewCategoryFormModal extends Component {
             name: this.state.categoryName,
             parent_id: this.state.parentId,
             id: this.state.categoryId,
-            size: this.state.size
+            info: this.state.info
         }
         CategoryServices.addNewSku(data, (res) => {
             if (res.data.err === 0) {
@@ -313,7 +313,7 @@ export class EditCategoryFormModal extends Component {
         this.state = {
             categoryId: '',
             categoryName: '',
-            size: 0,
+            info: 0,
             parentId: 0,
             selectedOption: {
                 value: '0',
@@ -327,7 +327,7 @@ export class EditCategoryFormModal extends Component {
             categoryName: this.props.baseData.name,
             parentId: this.props.baseData.parentId,
             categoryId: this.props.baseData.id,
-            size: this.props.baseData.size
+            info: this.props.baseData.info
         });
         let parentInfo = this.props.listParents.find((item) => item.id === this.props.baseData.parentId);
         if (parentInfo) {
@@ -348,7 +348,7 @@ export class EditCategoryFormModal extends Component {
     }
 
     updateSizeValue(event) {
-        this.setState({ size: event.target.value });
+        this.setState({ info: event.target.value });
     }
 
     updateParenIDValue(selectedOption) {
@@ -369,7 +369,7 @@ export class EditCategoryFormModal extends Component {
                 name: this.state.categoryName,
                 parent_id: this.state.parentId,
                 id: this.state.categoryId,
-                size: this.state.size
+                info: this.state.info
             }
             CategoryServices.updateSku(data, (res) => {
                 if (res.data.err === 0) {
@@ -428,7 +428,7 @@ export class EditCategoryFormModal extends Component {
                         <div className="position-relative row margin-bottom-5">
                             <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Size (kg):</label>
                             <div className="col-6">
-                                <input onChange={(event) => this.updateSizeValue(event)} value={this.state.size} type="text" className="form-control" />
+                                <input onChange={(event) => this.updateSizeValue(event)} value={this.state.info} type="text" className="form-control" />
                             </div>
                         </div>
                         <div className="position-relative form-group row">
