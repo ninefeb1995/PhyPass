@@ -64,7 +64,7 @@ export class Conveyor extends Component {
                                 return <div className="progress-container">
                                     <div className="progress-id">{item.skuId}</div>
                                     <div className="progress">
-                                        <div className="progress-bar" style={{ width: percentage, backgroundColor: this.getBgColorForProgressBar(index) }}>
+                                        <div className="progress-bar" role="progressbar" style={{ width: percentage, backgroundColor: this.getBgColorForProgressBar(index) }}>
                                             {item.currentQuantity}
                                         </div>
                                     </div>
@@ -545,29 +545,29 @@ export class NewInvoiceModal extends Component {
                 </div>
                 <div className="modal-body">
                     <div className="form-horizontal">
-                        <div className="position-relative row">
+                        <div className="position-relative row margin-bottom-5">
                             <label className="col-4 col-form-label">STATUS:</label>
                         </div>
-                        <div className="position-relative row">
+                        <div className="position-relative row margin-bottom-5">
                             <label className="col-4 col-form-label">INVOICE:</label>
                             <div className="col-6">
                                 <input onChange={(e) => this.setState({ invoiceCode: e.target.value })} type="text" className="form-control" />
                             </div>
                         </div>
-                        <div className="position-relative row">
+                        <div className="position-relative row margin-bottom-5">
                             <label className="col-4 col-form-label">EMPLOYEE:</label>
                             <div className="col-6">
                                 <EmployeeSelectList onChange={this.onEmployeeSelected} listEmployee={this.state.listEmployee} />
                             </div>
                         </div>
-                        <div className="position-relative form-group row">
+                        <div className="position-relative form-group row margin-bottom-5">
                             <label className="col-4 col-form-label">TRUCK NUMBER:</label>
                             <div className="col-6">
                                 <input onChange={(e) => this.setState({ truckNumber: e.target.value })} type="text" className="form-control" />
                             </div>
                         </div>
                     </div>
-                    <div className="container-fluid">
+                    <div className="container-fluid margin-bottom-5">
                         <div className="align-content-center bg-dark-alpha row" style={{ height: "30px" }}>
                             <div className="col-4">
                                 Name

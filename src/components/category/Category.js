@@ -21,8 +21,9 @@ export class CategoryList extends Component {
     componentDidMount() {
         CategoryServices.getListSku(1, 50, (res) => {
             if (res.data.err === 0) {
-                this.setState({listSkusRaw: res.data.data});
-                this.handleRawData();
+                this.setState({ listSkusRaw: res.data.data }, () => {
+                    this.handleRawData();
+                });
             }
         });
     }
@@ -31,7 +32,7 @@ export class CategoryList extends Component {
         if (data) {
             const temp = this.state.listSkusRaw.slice();
             temp.push(data);
-            this.setState({listSkusRaw: temp});
+            this.setState({ listSkusRaw: temp });
             toast(Message.CATEGORY.ADD_SUCCESS, {
                 type: toast.TYPE.SUCCESS,
                 autoClose: 2000
@@ -43,14 +44,15 @@ export class CategoryList extends Component {
     handleUpdatingSkuList(data) {
         const temp = this.state.listSkusRaw.filter((item) => item.id !== data.id);
         temp.push(data);
-        this.setState({listSkusRaw: temp});
-        this.handleRawData();
+        this.setState({ listSkusRaw: temp }, () => {
+            this.handleRawData();
+        });
     }
 
     handleRawData() {
-        if(this.state.listSkusRaw) {
-            let parents = this.state.listSkusRaw.filter((item) => item.parentId === 0);
-            let children = this.state.listSkusRaw.filter((item) => item.parentId !== 0);
+        if (this.state.listSkusRaw) {
+            let parents = this.state.listSkusRaw.filter((item) => Number.parseInt(item.parentId) === 0);
+            let children = this.state.listSkusRaw.filter((item) => Number.parseInt(item.parentId) !== 0);
             parents.forEach((item) => item.children = []);
             children.forEach((child) => {
                 let parentAt = 0;
@@ -64,7 +66,7 @@ export class CategoryList extends Component {
                     parents[parentAt].children.push(child);
                 }
             });
-            this.setState({parents, children});
+            this.setState({ parents, children });
         }
     }
 
@@ -74,7 +76,7 @@ export class CategoryList extends Component {
                 <div className="card-header header-elements-inline">
                     <div className="header-elements">
                         <button className="btn btn-success btn-sm" data-toggle="modal" data-target="#popupModal">New Category</button>
-                        <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+                        <div className="modal fade" id="popupModal" tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                             <div className="modal-dialog modal-sm" role="document">
                                 <NewCategoryFormModal listParents={this.state.parents} onCreatedCategory={this.onCategoryCreated} />
                             </div>
@@ -106,7 +108,7 @@ export class Category extends Component {
 
     toggle(e) {
         if (e.target.tagName.toLowerCase() !== 'i') {
-            this.state.toggle? this.setState({toggle: false}) : this.setState({toggle: true});
+            this.state.toggle ? this.setState({ toggle: false }) : this.setState({ toggle: true });
         }
     }
 
@@ -122,17 +124,17 @@ export class Category extends Component {
         const { information } = this.props;
 
         return (
-            <li className={this.state.toggle? "nav-item nav-item-submenu nav-item-open" : "nav-item nav-item-submenu"}>
+            <li className={this.state.toggle ? "nav-item nav-item-submenu nav-item-open" : "nav-item nav-item-submenu"}>
                 <span onClick={(e) => this.toggle(e)} className="nav-link bg-blue cursor">
                     {information.name}
-                    <i onClick={(e) => this.onEditSku(e)} data-toggle="modal" data-target={"#popupEditModal"+information.id} className="fa fa-edit margin-left-10"></i>                   
+                    <i onClick={(e) => this.onEditSku(e)} data-toggle="modal" data-target={"#popupEditModal" + information.id} className="fa fa-edit margin-left-10"></i>
                 </span>
-                <div className="modal fade" id={"popupEditModal"+information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+                <div className="modal fade" id={"popupEditModal" + information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                     <div className="modal-dialog modal-sm" role="document">
                         <EditCategoryFormModal listParents={this.props.listParents} baseData={information} onEditedCategory={this.onCategoryEdited} />
                     </div>
                 </div>
-                <ul className="nav nav-group-sub" style={{display: this.state.toggle? "block" : ""}}>
+                <ul className="nav nav-group-sub" style={{ display: this.state.toggle ? "block" : "" }}>
                     {information.children.map((item, index) => {
                         let isOdd = true;
                         if (index % 2 === 0) {
@@ -165,9 +167,9 @@ export class SubCategory extends Component {
             <li>
                 <span className={isOdd ? "nav-link" : "nav-link striped-sku-children-list"}>
                     {information.name}
-                    <i data-toggle="modal" data-target={"#popupEditModal"+information.id} className="fa fa-edit margin-left-10 cursor"></i>                   
+                    <i data-toggle="modal" data-target={"#popupEditModal" + information.id} className="fa fa-edit margin-left-10 cursor"></i>
                 </span>
-                <div className="modal fade" id={"popupEditModal"+information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+                <div className="modal fade" id={"popupEditModal" + information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                     <div className="modal-dialog modal-sm" role="document">
                         <EditCategoryFormModal listParents={this.props.listParents} baseData={information} onEditedCategory={this.onCategoryEdited} />
                     </div>
@@ -183,7 +185,9 @@ export class NewCategoryFormModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            categoryId: '',
             categoryName: '',
+            size: 0,
             parentId: 0,
             selectedOption: {
                 value: '0',
@@ -193,20 +197,30 @@ export class NewCategoryFormModal extends Component {
     }
 
     updateNameValue(event) {
-        this.setState({categoryName: event.target.value});
+        this.setState({ categoryName: event.target.value });
     }
 
-    updateParenIDValue(selectedOption) {
+    updateIdValue(event) {
+        this.setState({ categoryId: event.target.value });
+    }
+
+    updateSizeValue(event) {
+        this.setState({ size: event.target.value });
+    }
+
+    updateParentIdValue(selectedOption) {
         this.setState({
             parentId: selectedOption.value,
             selectedOption
-        })
+        });
     }
 
     onCreateNewCategory() {
         let data = {
             name: this.state.categoryName,
-            parent_id: this.state.parentId
+            parent_id: this.state.parentId,
+            id: this.state.categoryId,
+            size: this.state.size
         }
         CategoryServices.addNewSku(data, (res) => {
             if (res.data.err === 0) {
@@ -217,7 +231,7 @@ export class NewCategoryFormModal extends Component {
 
     isValidData() {
         if (this.state.categoryName.trim() !== '') {
-                return true;
+            return true;
         }
         return false;
     }
@@ -241,23 +255,35 @@ export class NewCategoryFormModal extends Component {
         return (
             <div className="modal-content">
                 <div className="modal-header bg-blue">
-                    <h4 className="modal-title" style={{paddingTop: "0.3em"}}>NEW CATEGORY</h4>
+                    <h4 className="modal-title" style={{ paddingTop: "0.3em" }}>NEW CATEGORY</h4>
                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
-                </div> 
+                </div>
                 <div className="modal-body">
                     <div className="form-horizontal">
-                        <div className="position-relative row">
+                        <div className="position-relative row margin-bottom-5">
+                            <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">ID:</label>
+                            <div className="col-6">
+                                <input onChange={(event) => this.updateIdValue(event)} type="text" className="form-control" />
+                            </div>
+                        </div>
+                        <div className="position-relative row margin-bottom-5">
                             <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Category Name:</label>
                             <div className="col-6">
                                 <input onChange={(event) => this.updateNameValue(event)} type="text" className="form-control" />
                             </div>
                         </div>
-                        <div className="position-relative form-group row">
+                        <div className="position-relative row margin-bottom-5">
+                            <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Size (kg):</label>
+                            <div className="col-6">
+                                <input onChange={(event) => this.updateSizeValue(event)} type="text" className="form-control" />
+                            </div>
+                        </div>
+                        <div className="position-relative form-group row margin-bottom-5">
                             <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Parent Category (Optional):</label>
                             <div className="col-6">
-                                <Select value={selectedOption} options={options} onChange={(selectedOption) => this.updateParenIDValue(selectedOption)}
+                                <Select value={selectedOption} options={options} onChange={(selectedOption) => this.updateParentIdValue(selectedOption)}
                                     theme={(theme) => ({
                                         ...theme,
                                         borderRadius: 0,
@@ -273,7 +299,7 @@ export class NewCategoryFormModal extends Component {
                 </div>
                 <div className="modal-footer">
                     <button onClick={() => this.onCreateNewCategory()} disabled={!this.isValidData()} data-dismiss="modal" className="btn btn-success btn-sm">Done</button>
-                </div>             
+                </div>
             </div>
         );
     }
@@ -285,7 +311,9 @@ export class EditCategoryFormModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            categoryId: '',
             categoryName: '',
+            size: 0,
             parentId: 0,
             selectedOption: {
                 value: '0',
@@ -298,6 +326,8 @@ export class EditCategoryFormModal extends Component {
         this.setState({
             categoryName: this.props.baseData.name,
             parentId: this.props.baseData.parentId,
+            categoryId: this.props.baseData.id,
+            size: this.props.baseData.size
         });
         let parentInfo = this.props.listParents.find((item) => item.id === this.props.baseData.parentId);
         if (parentInfo) {
@@ -305,12 +335,20 @@ export class EditCategoryFormModal extends Component {
                 value: parentInfo.id,
                 label: parentInfo.name
             };
-            this.setState({selectedOption: selectedOptionTemp});
+            this.setState({ selectedOption: selectedOptionTemp });
         }
     }
 
     updateNameValue(event) {
-        this.setState({categoryName: event.target.value});
+        this.setState({ categoryName: event.target.value });
+    }
+
+    updateIdValue(event) {
+        this.setState({ categoryId: event.target.value });
+    }
+
+    updateSizeValue(event) {
+        this.setState({ size: event.target.value });
     }
 
     updateParenIDValue(selectedOption) {
@@ -322,15 +360,16 @@ export class EditCategoryFormModal extends Component {
 
     onEditCategory(e) {
         if (this.props.baseData.children && this.props.baseData.children.length > 0 && this.state.parentId !== 0) {
-           toast(Message.CATEGORY.UPDATE_PARENT_VIOLATION, {
-               type: toast.TYPE.ERROR,
-               autoClose: 2000
-           });
+            toast(Message.CATEGORY.UPDATE_PARENT_VIOLATION, {
+                type: toast.TYPE.ERROR,
+                autoClose: 2000
+            });
         } else {
             let data = {
-                id: this.props.baseData.id,
                 name: this.state.categoryName,
-                parent_id: this.state.parentId
+                parent_id: this.state.parentId,
+                id: this.state.categoryId,
+                size: this.state.size
             }
             CategoryServices.updateSku(data, (res) => {
                 if (res.data.err === 0) {
@@ -342,7 +381,7 @@ export class EditCategoryFormModal extends Component {
 
     isValidData() {
         if (this.state.categoryName.trim() !== '') {
-                return true;
+            return true;
         }
         return false;
     }
@@ -367,23 +406,35 @@ export class EditCategoryFormModal extends Component {
         return (
             <div className="modal-content">
                 <div className="modal-header bg-blue">
-                    <h4 className="modal-title" style={{paddingTop: "0.3em"}}>EDIT CATEGORY</h4>
+                    <h4 className="modal-title" style={{ paddingTop: "0.3em" }}>EDIT CATEGORY</h4>
                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
-                </div> 
+                </div>
                 <div className="modal-body">
                     <div className="form-horizontal">
-                        <div className="position-relative row">
+                        <div className="position-relative row margin-bottom-5">
+                            <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">ID:</label>
+                            <div className="col-6">
+                                <input onChange={(event) => this.updateIdValue(event)} value={this.state.categoryId} type="text" className="form-control" />
+                            </div>
+                        </div>
+                        <div className="position-relative row margin-bottom-5">
                             <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Category Name:</label>
                             <div className="col-6">
-                                <input onChange={(event) => this.updateNameValue(event)} type="text" value={this.state.categoryName} className="form-control" />
+                                <input onChange={(event) => this.updateNameValue(event)} value={this.state.categoryName} type="text" className="form-control" />
+                            </div>
+                        </div>
+                        <div className="position-relative row margin-bottom-5">
+                            <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Size (kg):</label>
+                            <div className="col-6">
+                                <input onChange={(event) => this.updateSizeValue(event)} value={this.state.size} type="text" className="form-control" />
                             </div>
                         </div>
                         <div className="position-relative form-group row">
                             <label className="col-6 col-sm-6 col-md-6 col-xl-6 col-form-label">Parent Category (Optional):</label>
                             <div className="col-6">
-                                <Select value={selectedOption} options={options} onChange={(selectedOption) =>this.updateParenIDValue(selectedOption)}
+                                <Select value={selectedOption} options={options} onChange={(selectedOption) => this.updateParenIDValue(selectedOption)}
                                     theme={(theme) => ({
                                         ...theme,
                                         borderRadius: 0,
@@ -399,7 +450,7 @@ export class EditCategoryFormModal extends Component {
                 </div>
                 <div className="modal-footer">
                     <button onClick={(e) => this.onEditCategory(e)} disabled={!this.isValidData()} data-dismiss="modal" className="btn btn-success btn-sm">Done</button>
-                </div>             
+                </div>
             </div>
         );
     }
