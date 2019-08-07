@@ -286,14 +286,13 @@ export class ButtonField extends Component {
         switch (status) {
             default:
                 return (
-                    <div className="">
-                    </div>
+                    <div></div>
                 );
             case 2:
                 return (
                     <div>
-                        <button /*disabled={this.state.isToggle}*/ onClick={() => this.onToggle()} className="btn btn-danger">
-                            <span style={{ marginRight: "5px" }}>Cancel</span>
+                        <button onClick={() => this.onToggle()} className="btn btn-danger">
+                            <span className="margin-right-5">Cancel</span>
                             <span><i className="fa fa-caret-down"></i></span>
                         </button>
                         <ul className={this.state.isToggle ? "cancelReason display-block" : "cancelReason"} id={"cancelReason" + btnId}>
@@ -307,7 +306,6 @@ export class ButtonField extends Component {
                             </li>
                             <li style={{ textAlign: "right", paddingTop: "10px" }}>
                                 <button onClick={() => this.onClickBtn(BtnNumber.CANCEL)} disabled={this.state.cancelReason.trim() === ''} className="btn btn-primary" data-dismiss="modal" style={{ margin: "0.25rem", marginLeft: 0 }}>OK</button>
-                                {/* <button onClick={() => this.onToggle()} className="btn btn-default" style={{ margin: "0.25rem", marginRight: 0 }}>Close</button> */}
                             </li>
                         </ul>
                     </div>
@@ -316,7 +314,7 @@ export class ButtonField extends Component {
                 return (
                     <div className="">
                         <button onClick={() => this.onToggle()} className="btn btn-danger" style={{ margin: "0.25rem", marginLeft: 0 }}>
-                            <span style={{ marginRight: "5px" }}>Cancel</span>
+                            <span className="margin-right-5">Cancel</span>
                             <span><i className="fa fa-caret-down"></i></span>
                         </button>
                         <button disabled={this.state.isToggle} onClick={() => this.onClickBtn(BtnNumber.RESUME)} className="btn btn-success" data-dismiss="modal" style={{ margin: "0.25rem", marginRight: 0 }}>Resume</button>
@@ -331,7 +329,6 @@ export class ButtonField extends Component {
                             </li>
                             <li style={{ textAlign: "right", paddingTop: "10px" }}>
                                 <button onClick={() => this.onClickBtn(BtnNumber.CANCEL)} disabled={this.state.cancelReason.trim() === ''} className="btn btn-primary" data-dismiss="modal" style={{ margin: "0.25rem", marginLeft: 0 }}>OK</button>
-                                {/* <button onClick={() => this.onToggle()} className="btn btn-default" style={{ margin: "0.25rem", marginRight: 0 }}>Close</button> */}
                             </li>
                         </ul>
                     </div>
@@ -392,7 +389,7 @@ export class NewInvoiceModal extends Component {
     addNewRow() {
         let listRowData = this.state.invoiceDetailData.slice();
         listRowData.push({
-            skuId: 0,
+            skuId: '0',
             target: 0
         });
         this.setState({
@@ -466,7 +463,7 @@ export class NewInvoiceModal extends Component {
         let listRowData = this.state.invoiceDetailData.slice();
         listRowData.forEach((item, itemIndex) => {
             if (itemIndex === index) {
-                item.skuId = Number.parseInt(value);
+                item.skuId = value;
             }
         });
         let skuOutItems = this.state.listSkuHandled.filter((item) => {
@@ -496,9 +493,9 @@ export class NewInvoiceModal extends Component {
     onStart() {
         let listInvoiceDetailData = [];
         this.state.invoiceDetailData.forEach((item) => {
-            if (item.skuId && item.skuId > 0 && item.target && item.target >= 0) {
+            if (item.skuId && item.target && item.target >= 0) {
                 listInvoiceDetailData.push({
-                    sku_id: item.skuId,
+                    sku_id: item.skuId.toString(),
                     target: item.target
                 });
             }
@@ -526,7 +523,7 @@ export class NewInvoiceModal extends Component {
             && this.state.staffId && this.state.staffId > 0
             && this.state.truckNumber
             && this.state.invoiceDetailData && this.state.invoiceDetailData.length > 0
-            && this.state.invoiceDetailData.every((item) => item.target && item.target >= 0 && item.skuId && item.skuId > 0)) {
+            && this.state.invoiceDetailData.every((item) => item.target && item.target >= 0 && item.skuId)) {
             return true;
         }
         return false;
