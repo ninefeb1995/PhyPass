@@ -53,22 +53,23 @@ export class Conveyor extends Component {
 
         return (
             <div className="card custom-card">
-                <div className={"card-body " + this.getBgColorClassName(information.status)}
+                <div className={"cursor-pointer card-body " + this.getBgColorClassName(information.status)}
                     data-toggle="modal" data-target={"#popupModal" + information.id}
-                    onClick={() => this.setState({ modalClick: this.state.modalClick + 1 })}
-                    style={{ cursor: 'pointer' }}>
-                    <div className="height-100">
+                    onClick={() => this.setState({ modalClick: this.state.modalClick + 1 })}>
+                    <div className="height-225">
                         <div className="width-75">
                             {this.props.information.details && this.props.information.details.slice(0, 5).map((item, index) => {
                                 let percentage = (item.currentQuantity / item.targetQuantity * 100).toFixed() + '%';
                                 return <div className="progress-container">
                                     <div className="progress-id">{item.skuId}</div>
-                                    <div className="progress">
-                                        <div className="progress-bar" role="progressbar" style={{ width: percentage, backgroundColor: this.getBgColorForProgressBar(index) }}>
-                                            {item.currentQuantity}
+                                    <div className="d-flex">
+                                        <div className="progress">
+                                            <div className="progress-bar" role="progressbar" style={{ width: percentage, backgroundColor: this.getBgColorForProgressBar(index) }}>
+                                                {item.currentQuantity}
+                                            </div>
                                         </div>
+                                        <div className="progress-label">{item.targetQuantity}</div>
                                     </div>
-                                    <div className="progress-label">{item.targetQuantity}</div>
                                 </div>
                             })}
                         </div>
@@ -270,7 +271,18 @@ export class ButtonField extends Component {
         this.state = {
             cancelReason: '',
             isToggle: false
-        }
+        };
+
+        this.setWrapperRef = this.setWrapperRef.bind(this);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
+    }
+
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
     }
 
     onToggle() {
@@ -282,6 +294,19 @@ export class ButtonField extends Component {
         this.props.onClick(id, this.state.cancelReason);
     }
 
+    setWrapperRef(node) {
+        this.wrapperRef = node;
+    }
+
+    handleClickOutside(event) {
+        if (this.wrapperRef
+            && !this.wrapperRef.contains(event.target)
+            && !this.btnRef.contains(event.target)
+            && this.state.isToggle) {
+            this.setState({ isToggle: false });
+        }
+    }
+
     renderButtonField(status, btnId) {
         switch (status) {
             default:
@@ -291,11 +316,11 @@ export class ButtonField extends Component {
             case 2:
                 return (
                     <div>
-                        <button onClick={() => this.onToggle()} className="btn btn-danger">
+                        <button ref={(node) => this.btnRef = node} onClick={(e) => this.onToggle(e)} className="btn btn-danger">
                             <span className="margin-right-5">Cancel</span>
                             <span><i className="fa fa-caret-down"></i></span>
                         </button>
-                        <ul className={this.state.isToggle ? "cancelReason display-block" : "cancelReason"} id={"cancelReason" + btnId}>
+                        <ul ref={this.setWrapperRef} className={this.state.isToggle ? "cancelReason display-block" : "cancelReason"} id={"cancelReason" + btnId}>
                             <li className="margin-bottom-5">
                                 <span>Are you sure you want to cancel the progress of this conveyor?</span>
                             </li>
@@ -312,13 +337,13 @@ export class ButtonField extends Component {
                 );
             case 4:
                 return (
-                    <div className="">
-                        <button onClick={() => this.onToggle()} className="btn btn-danger" style={{ margin: "0.25rem", marginLeft: 0 }}>
+                    <div>
+                        <button ref={(node) => this.btnRef = node} onClick={(e) => this.onToggle(e)} className="btn btn-danger" style={{ margin: "0.25rem", marginLeft: 0 }}>
                             <span className="margin-right-5">Cancel</span>
                             <span><i className="fa fa-caret-down"></i></span>
                         </button>
                         <button disabled={this.state.isToggle} onClick={() => this.onClickBtn(BtnNumber.RESUME)} className="btn btn-success" data-dismiss="modal" style={{ margin: "0.25rem", marginRight: 0 }}>Resume</button>
-                        <ul className={this.state.isToggle ? "cancelReason display-block" : "cancelReason"} id={"cancelReason" + btnId}>
+                        <ul ref={this.setWrapperRef} className={this.state.isToggle ? "cancelReason display-block" : "cancelReason"} id={"cancelReason" + btnId}>
                             <li className="margin-bottom-5">
                                 <span>Are you sure you want to cancel the progress of this conveyor?</span>
                             </li>
@@ -449,7 +474,7 @@ export class NewInvoiceModal extends Component {
                 <div className="col-3">
                 </div>
                 <div className="col-1 icon-trash-center">
-                    <i onClick={() => this.onDeleteRow(index)} className="fa fa-trash cursor"></i>
+                    <i onClick={() => this.onDeleteRow(index)} className="fa fa-trash cursor-pointer"></i>
                 </div>
             </div>
         );

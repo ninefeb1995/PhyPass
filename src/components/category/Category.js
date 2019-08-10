@@ -125,7 +125,7 @@ export class Category extends Component {
 
         return (
             <li className={this.state.toggle ? "nav-item nav-item-submenu nav-item-open" : "nav-item nav-item-submenu"}>
-                <span onClick={(e) => this.toggle(e)} className="nav-link bg-blue cursor">
+                <span onClick={(e) => this.toggle(e)} className="nav-link bg-blue cursor-pointer">
                     {information.name}
                     <i onClick={(e) => this.onEditSku(e)} data-toggle="modal" data-target={"#popupEditModal" + information.id} className="fa fa-edit margin-left-10"></i>
                 </span>
@@ -167,7 +167,7 @@ export class SubCategory extends Component {
             <li>
                 <span className={isOdd ? "nav-link" : "nav-link striped-sku-children-list"}>
                     {information.name}
-                    <i data-toggle="modal" data-target={"#popupEditModal" + information.id} className="fa fa-edit margin-left-10 cursor"></i>
+                    <i data-toggle="modal" data-target={"#popupEditModal" + information.id} className="fa fa-edit margin-left-10 cursor-pointer"></i>
                 </span>
                 <div className="modal fade" id={"popupEditModal" + information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                     <div className="modal-dialog modal-sm" role="document">
@@ -313,8 +313,8 @@ export class EditCategoryFormModal extends Component {
         this.state = {
             categoryId: '',
             categoryName: '',
-            info: 0,
-            parentId: 0,
+            info: '0',
+            parentId: '0',
             selectedOption: {
                 value: '0',
                 label: 'None'
@@ -358,8 +358,8 @@ export class EditCategoryFormModal extends Component {
         });
     }
 
-    onEditCategory(e) {
-        if (this.props.baseData.children && this.props.baseData.children.length > 0 && this.state.parentId !== 0) {
+    onEditCategory(e) {        
+        if (this.props.baseData.children && this.props.baseData.children.length > 0 && this.state.parentId !== '0') {
             toast(Message.CATEGORY.UPDATE_PARENT_VIOLATION, {
                 type: toast.TYPE.ERROR,
                 autoClose: 2000
@@ -370,7 +370,7 @@ export class EditCategoryFormModal extends Component {
                 parent_id: this.state.parentId,
                 id: this.state.categoryId,
                 info: this.state.info
-            }
+            };
             CategoryServices.updateSku(data, (res) => {
                 if (res.data.err === 0) {
                     this.props.onEditedCategory(res.data.data);

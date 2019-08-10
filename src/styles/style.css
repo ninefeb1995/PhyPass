@@ -16,14 +16,14 @@
 
 .custom-card {
     min-width: 100%;
-    height: 290px;
+    height: 415px;
 }
 
 .custom-card-content {
     padding: 15px;
     border-radius: 5px;
     margin: 18px -18px -18px -18px;
-    min-height: 60%;
+    min-height: 40%;
 }
 
 .ta-center {
@@ -83,7 +83,7 @@ a.waves-light {
     border-top-color: transparent !important;
 }
 
-.cursor {
+.cursor-pointer {
     cursor: pointer;
 }
 
@@ -135,46 +135,58 @@ body {
     color: red;
 }
 
-.height-100 {
-    height: 100px;
+.height-225 {
+    height: 225px;
 }
 
 .width-75 {
     position: absolute;
     left: 0;
     right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    width: 75%;
-}
-
-.progress {
-    height: 1rem;
-    margin-bottom: 0.125rem;
-    flex-grow: 1;
+    margin-left: 10px;
+    width: 90%;
 }
 
 .progress-container {
     display: flex;
+    flex-direction: column;
     position: relative;
+    margin: 1px;
+    padding: 2px;
+}
+
+.progress-container .d-flex {
+    width: 80%;
+}
+
+.progress {
+    height: 1rem;
+    flex-grow: 1;
+    box-shadow: 1px 1px 4px 1px #0095ffbf;
+}
+
+.progress-bar {
+    overflow: unset;
+    color: #615555;
+    font-weight: bold;
 }
 
 .progress-label {
     color: white;
     font-weight: bold;
     position: absolute;
-    right: -30px;
-    bottom: 0;
+    right: 0;
 }
 
 .progress-id {
     color: white;
     font-weight: bold;
-    position: absolute;
-    left: -20px;
-    bottom: 0;
 }
 
 .card-body {
     border-radius: 5px;
+}
+
+.modal-content {
+    border: none;
 }
