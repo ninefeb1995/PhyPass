@@ -6,6 +6,7 @@ import BtnNumber from '../../app/constants/constants';
 import { toast } from 'react-toastify';
 import Message from '../../app/constants/message';
 import Select from 'react-select';
+import getConveyorStatus from '../../app/helpers/getConveyorStatus';
 
 export class Conveyor extends Component {
     displayName = Conveyor.name;
@@ -22,7 +23,7 @@ export class Conveyor extends Component {
         switch (status) {
             default:
                 return '';
-            case 1:
+            case 0:
                 return 'bg-dark-alpha';
             case 2:
                 return 'bg-blue-800';
@@ -88,7 +89,7 @@ export class Conveyor extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="modal fade" id={"popupModal" + information.id} tabIndex="-1" role="diaglog" aria-labelledby="popupModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                <div className="modal fade" id={"popupModal" + information.id} tabIndex="-1" role="diaglog" data-backdrop="static" data-keyboard="false">
                     <div className="modal-dialog modal-lg" role="document">
                         <Modal information={information} modalClick={this.state.modalClick} />
                     </div>
@@ -104,7 +105,7 @@ export class Modal extends Component {
     render() {
         const { information } = this.props;
 
-        if (information.status === 1) {
+        if (information.status === 0) {
             return (
                 <NewInvoiceModal baseConveyorInfo={information} />
             );
@@ -122,6 +123,7 @@ export class ConveyorDetailModal extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
             conveyorDetail: null
         };
@@ -155,7 +157,7 @@ export class ConveyorDetailModal extends Component {
     handleClickBtn(id, reason) {
         let status = 0;
         if ([BtnNumber.CANCEL, BtnNumber.FINISH].some((x) => x === id)) {
-            status = 1;
+            status = 0;
         } else if ([BtnNumber.RESUME].some((x) => x === id)) {
             status = 2;
         }
@@ -247,7 +249,7 @@ export class ConveyorDetailModal extends Component {
                                         return <tr key={value.skuId}>
                                             <td>{index + 1}</td>
                                             <td>{value.skuId}</td>
-                                            <td>{value.info}</td>
+                                            <td>{value.sku.info}</td>
                                             <td>{value.targetQuantity}</td>
                                             <td>{value.currentQuantity}</td>
                                         </tr>
@@ -270,10 +272,13 @@ export class ButtonField extends Component {
         super(props);
         this.state = {
             cancelReason: '',
-            isToggle: false
+            resumeReason: '',
+            isToggle: false,
+            isToggle1: false,
         };
 
         this.setWrapperRef = this.setWrapperRef.bind(this);
+        this.setWrapperRef1 = this.setWrapperRef1.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
     }
 
@@ -285,25 +290,46 @@ export class ButtonField extends Component {
         document.removeEventListener('mousedown', this.handleClickOutside);
     }
 
-    onToggle() {
-        let isToggle = !this.state.isToggle;
-        this.setState({ isToggle });
+    onToggle(id) {
+        if (id === BtnNumber.CANCEL) {
+            let isToggle = !this.state.isToggle;
+            this.setState({ isToggle });
+        } else {
+            let isToggle1 = !this.state.isToggle1;
+            this.setState({ isToggle1 });
+        }
     }
 
     onClickBtn(id) {
-        this.props.onClick(id, this.state.cancelReason);
+        if (id === BtnNumber.CANCEL) {
+            this.props.onClick(id, this.state.cancelReason);
+        } else {
+            this.props.onClick(id, this.state.resumeReason);
+        }
     }
 
     setWrapperRef(node) {
         this.wrapperRef = node;
     }
 
+    setWrapperRef1(node) {
+        this.wrapperRef1 = node;
+    }
+
     handleClickOutside(event) {
         if (this.wrapperRef
             && !this.wrapperRef.contains(event.target)
+            && this.btnRef
             && !this.btnRef.contains(event.target)
             && this.state.isToggle) {
             this.setState({ isToggle: false });
+        }
+        if (this.wrapperRef1
+            && !this.wrapperRef1.contains(event.target)
+            && this.btnResumeRef
+            && !this.btnResumeRef.contains(event.target)
+            && this.state.isToggle1) {
+            this.setState({ isToggle1: false });
         }
     }
 
@@ -316,7 +342,7 @@ export class ButtonField extends Component {
             case 2:
                 return (
                     <div>
-                        <button ref={(node) => this.btnRef = node} onClick={(e) => this.onToggle(e)} className="btn btn-danger">
+                        <button ref={(node) => this.btnRef = node} onClick={() => this.onToggle(BtnNumber.CANCEL)} className="btn btn-danger">
                             <span className="margin-right-5">Cancel</span>
                             <span><i className="fa fa-caret-down"></i></span>
                         </button>
@@ -338,11 +364,14 @@ export class ButtonField extends Component {
             case 4:
                 return (
                     <div>
-                        <button ref={(node) => this.btnRef = node} onClick={(e) => this.onToggle(e)} className="btn btn-danger" style={{ margin: "0.25rem", marginLeft: 0 }}>
+                        <button ref={(node) => this.btnRef = node} onClick={() => this.onToggle(BtnNumber.CANCEL)} className="btn btn-danger" style={{ margin: "0.25rem", marginLeft: 0 }}>
                             <span className="margin-right-5">Cancel</span>
                             <span><i className="fa fa-caret-down"></i></span>
                         </button>
-                        <button disabled={this.state.isToggle} onClick={() => this.onClickBtn(BtnNumber.RESUME)} className="btn btn-success" data-dismiss="modal" style={{ margin: "0.25rem", marginRight: 0 }}>Resume</button>
+                        <button ref={(node) => this.btnResumeRef = node} onClick={() => this.onToggle(BtnNumber.RESUME)} className="btn btn-success" style={{ margin: "0.25rem", marginRight: 0 }}>
+                            <span className="margin-right-5">Resume</span>
+                            <span><i className="fa fa-caret-down"></i></span>
+                        </button>
                         <ul ref={this.setWrapperRef} className={this.state.isToggle ? "cancelReason display-block" : "cancelReason"} id={"cancelReason" + btnId}>
                             <li className="margin-bottom-5">
                                 <span>Are you sure you want to cancel the progress of this conveyor?</span>
@@ -354,6 +383,19 @@ export class ButtonField extends Component {
                             </li>
                             <li style={{ textAlign: "right", paddingTop: "10px" }}>
                                 <button onClick={() => this.onClickBtn(BtnNumber.CANCEL)} disabled={this.state.cancelReason.trim() === ''} className="btn btn-primary" data-dismiss="modal" style={{ margin: "0.25rem", marginLeft: 0 }}>OK</button>
+                            </li>
+                        </ul>
+                        <ul ref={this.setWrapperRef1} className={this.state.isToggle1 ? "cancelReason display-block" : "cancelReason"} id={"resumeReason" + btnId}>
+                            <li className="margin-bottom-5">
+                                <span>Are you sure you want to resume the progress of this conveyor?</span>
+                            </li>
+                            <li>
+                                <form name="resumeReasonForm">
+                                    <textarea onChange={(e) => this.setState({ resumeReason: e.target.value })} className="form-control" rows="3" placeholder="Please input your reason here..."></textarea>
+                                </form>
+                            </li>
+                            <li style={{ textAlign: "right", paddingTop: "10px" }}>
+                                <button onClick={() => this.onClickBtn(BtnNumber.RESUME)} disabled={this.state.resumeReason.trim() === ''} className="btn btn-primary" data-dismiss="modal" style={{ margin: "0.25rem", marginLeft: 0 }}>OK</button>
                             </li>
                         </ul>
                     </div>
@@ -381,6 +423,7 @@ export class NewInvoiceModal extends Component {
 
     constructor(props) {
         super(props);
+        
         this.state = {
             listEmployee: [],
             listSkusRaw: [],
@@ -391,8 +434,10 @@ export class NewInvoiceModal extends Component {
             invoiceCode: '',
             staffId: 0,
             truckNumber: 0,
-            invoiceDetailData: []
+            invoiceDetailData: [],
+            status: ''
         };
+        
         this.onEmployeeSelected = this.onEmployeeSelected.bind(this);
         this.onSkuSelected = this.onSkuSelected.bind(this);
     }
@@ -515,6 +560,28 @@ export class NewInvoiceModal extends Component {
         this.setState({ invoiceDetailData: listRowData });
     }
 
+    onInvoiceInputted() {
+        DashBoardService.getInvoiceDetail(this.state.invoiceCode, (res) => {
+            if (res.data.err === 0) {
+                let status = getConveyorStatus(res.data.data.status),
+                    truckNumber = res.data.data.truckNumber,
+                    invoiceDetailData = res.data.data.details.map((item) => {
+                        return {
+                            skuId: item.skuId,
+                            target: item.targetQuantity
+                        };
+                    });
+                this.setState({
+                    status,
+                    truckNumber,
+                    invoiceDetailData
+                });
+            } else {
+                this.setState({ status: '' });
+            }
+        });
+    }
+
     onStart() {
         let listInvoiceDetailData = [];
         this.state.invoiceDetailData.forEach((item) => {
@@ -533,25 +600,35 @@ export class NewInvoiceModal extends Component {
             status: 2,
             listInvoiceDetailData
         };
-        DashBoardService.createNewConveyorDetail(invoiceData, (res) => {
-            if (res.data.err === 0) {
-                toast(Message.DASHBOARD.CREATE_CONVEYOR_DETAIL_SUCCESS, {
-                    type: toast.TYPE.SUCCESS,
-                    autoClose: 2000
-                });
-            }
-        });
+        if (this.state.status === '') {
+            DashBoardService.createNewConveyorDetail(invoiceData, (res) => {
+                if (res.data.err === 0) {
+                    toast(Message.DASHBOARD.CREATE_CONVEYOR_DETAIL_SUCCESS, {
+                        type: toast.TYPE.SUCCESS,
+                        autoClose: 2000
+                    });
+                }
+            });
+        } else {
+            delete invoiceData.listInvoiceDetailData;
+            invoiceData.reason = '';
+            DashBoardService.updateConveyorDetail(invoiceData, (res) => {
+                if (res.data.err === 0) {
+                    toast(Message.DASHBOARD.UPDATE_STATUS_SUCCESS, {
+                        type: toast.TYPE.SUCCESS,
+                        autoClose: 2000
+                    });
+                }
+            });
+        }
     }
 
     validateData() {
-        if (this.state.invoiceCode && this.state.invoiceCode !== ''
+        return this.state.invoiceCode && this.state.invoiceCode !== ''
             && this.state.staffId && this.state.staffId > 0
             && this.state.truckNumber
             && this.state.invoiceDetailData && this.state.invoiceDetailData.length > 0
-            && this.state.invoiceDetailData.every((item) => item.target && item.target >= 0 && item.skuId)) {
-            return true;
-        }
-        return false;
+            && this.state.invoiceDetailData.every((item) => item.target && item.target >= 0 && item.skuId);
     }
 
     render() {
@@ -569,11 +646,16 @@ export class NewInvoiceModal extends Component {
                     <div className="form-horizontal">
                         <div className="position-relative row margin-bottom-5">
                             <label className="col-4 col-form-label">STATUS:</label>
+                            <div className="col-6" style={{padding: '.5rem'}}>
+                                <span>{this.state.status}</span>
+                            </div>
                         </div>
                         <div className="position-relative row margin-bottom-5">
                             <label className="col-4 col-form-label">INVOICE:</label>
                             <div className="col-6">
-                                <input onChange={(e) => this.setState({ invoiceCode: e.target.value })} type="text" className="form-control" />
+                                <input onChange={(e) => this.setState({ invoiceCode: e.target.value })}
+                                    onBlur={() => this.onInvoiceInputted()}
+                                    type="text" className="form-control" />
                             </div>
                         </div>
                         <div className="position-relative row margin-bottom-5">
@@ -585,7 +667,9 @@ export class NewInvoiceModal extends Component {
                         <div className="position-relative form-group row margin-bottom-5">
                             <label className="col-4 col-form-label">TRUCK NUMBER:</label>
                             <div className="col-6">
-                                <input onChange={(e) => this.setState({ truckNumber: e.target.value })} type="text" className="form-control" />
+                                <input value={this.state.truckNumber}
+                                onChange={(e) => this.setState({ truckNumber: e.target.value })}
+                                type="text" className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -640,8 +724,8 @@ export class EmployeeSelectList extends Component {
 
     render() {
         const { selectedOption } = this.state;
-        let { listEmployee } = this.props;
-        let options = [];
+        let { listEmployee } = this.props,
+            options = [];
         listEmployee.map((item) => {
             let option = {
                 value: item.id,

@@ -1,0 +1,199 @@
+.floating-window {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    transform: translateY(70px);
+    transition: all 250ms ease-out;
+    border-radius: 50%;
+    opacity: 0;
+    background: -moz-linear-gradient(-45deg, #2a3140 0, #35415c 25%, #37445f 50%, #384c77 75%, #5675b8 100%);
+    background: -webkit-linear-gradient(-45deg, #2a3140 0, #35415c 25%, #37445f 50%, #384c77 75%, #5675b8 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.floating-window .message-badge {
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    color: white;
+    background-color: #26A69A;
+    z-index: 1;
+}
+
+.floating-window.enter {
+    transform: translateY(0);
+    opacity: 0.6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
+}
+
+.floating-window.enter:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    opacity: 1;
+}
+
+.floating-window.expand {
+    width: 300px;
+    max-height: 400px;
+    height: 400px;
+    border-radius: 5px;
+    cursor: auto;
+    opacity: 1;
+}
+
+.floating-window:focus {
+    outline: 0;
+    box-shadow: 0 0 3pt 2pt rgba(#0EC879, 0.3);
+}
+
+.floating-window button {
+    background: transparent;
+    border: 0;
+    color: white;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.floating-window .message-boxes {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    border-radius: 50%;
+    transition: all 250ms ease-out;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.floating-window .message-boxes.enter {
+    opacity: 1;
+    border-radius: 0;
+    margin: 10px;
+    width: auto;
+    height: auto;
+}
+
+.floating-window .message-boxes .header {
+    flex-shrink: 0;
+    padding-bottom: 10px;
+    display: flex;
+    background: transparent;
+}
+
+.floating-window .message-boxes .header .title {
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: 0 5px;
+    font-size: 16px;
+}
+
+.floating-window .message-boxes .header button {
+    flex-shrink: 0;
+}
+
+.floating-window .messages {
+    padding: 10px;
+    margin: 0;
+    list-style: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    flex-grow: 1;
+    border-radius: 4px;
+    background: transparent;
+}
+
+.floating-window .messages::-webkit-scrollbar {
+    width: 5px;
+}
+
+.floating-window .messages::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background-color: rgba(25, 147, 147, 0.1);
+}
+
+.floating-window .messages::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(25, 147, 147, 0.2);
+}
+
+.floating-window .messages li {
+    position: relative;
+    clear: both;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    margin: 0 0 20px 0;
+    font: 12px/16px 'Noto Sans', sans-serif;
+    border-radius: 10px;
+    background-color: rgba(79, 79, 79, 0.2);
+    word-wrap: break-word;
+    width: 85%;
+    max-width: 85%;
+}
+
+.floating-window .messages li::before {
+    content: '';
+    position: absolute;
+    background-size: cover;
+    top: 5px;
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+}
+
+.floating-window .messages li>div {
+    display: flex;
+    flex-direction: column;
+}
+
+.floating-window .messages li.message-item {
+    animation: show-chat-even linear 0.3s;
+    animation-iteration-count: 1;
+    float: left;
+    cursor: pointer;
+}
+
+.floating-window .messages li.message-item::before {
+    left: 40px;
+}
+
+@keyframes show-chat-even {
+    0% {
+        opacity: 0;
+        transform: translate(0, 10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+.padding-10 {
+    padding: 10px;
+}
+
+.margin-top-bottom-10 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.margin-top-0 {
+    margin-top: 0;
+}
+

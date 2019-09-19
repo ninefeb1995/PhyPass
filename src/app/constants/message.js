@@ -10,7 +10,8 @@ const Message = {
     },
     DASHBOARD: {
         UPDATE_STATUS_SUCCESS: 'Conveyor status has been updated',
-        CREATE_CONVEYOR_DETAIL_SUCCESS: 'Creating conveyor detail successfully'
+        CREATE_CONVEYOR_DETAIL_SUCCESS: 'Creating conveyor detail successfully',
+        ASSIGN_CONVEYOR_SUCCESS: 'Conveyor has been assigned successfully'
     },
     LOGIN: {
         WRONG_AUTHENTICATION: '* Wrong username or password'

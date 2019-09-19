@@ -4,13 +4,16 @@ import { Home } from './components/home/Home';
 import Auth from './components/authentication/Authentication';
 import history from './history';
 import 'react-toastify/dist/ReactToastify.css';
+import { ErrorBoundary } from './components/error-handler/ErrorBoundary';
 
 const auth = new Auth();
 
 const Routes = () => (
-  <Router history={history} component={Home}>
+  <ErrorBoundary>
+    <Router history={history} component={Home}>
       <Route render={(props) => <Home auth={auth} {...props} />} />
-  </Router>
+    </Router>
+  </ErrorBoundary>
 );
 
 export default Routes;

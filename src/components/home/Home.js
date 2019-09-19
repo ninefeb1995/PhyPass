@@ -7,6 +7,8 @@ import { Dashboard } from '../../components/dashboard/Dashboard';
 import { Report } from '../../components/report/Report';
 import { StaffList } from '../../components/staff/Staff';
 import { CategoryList } from '../../components/category/Category';
+import { WaitingList } from '../waiting-list/WaitingList';
+import { ErrorBoundary } from '../error-handler/ErrorBoundary';
 
 export class Home extends Component {
     constructor(props) {
@@ -35,7 +37,8 @@ export class Home extends Component {
                     <Route component={Dashboard} />
                 </Switch>
                 <ToastContainer />
-            </Layout>:
+                <WaitingList />
+            </Layout> :
             <Login login={this.login}></Login>;
     }
 }

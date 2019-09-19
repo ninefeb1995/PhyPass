@@ -13,8 +13,8 @@ export class SideBar extends Component {
                     </a>
                     Navigation
                     <a href="#" className="sidebar-mobile-expand">
-                            <i className="icon-screen-full"></i>
-                            <i className="icon-screen-normal"></i>
+                        <i className="icon-screen-full"></i>
+                        <i className="icon-screen-normal"></i>
                     </a>
                 </div>
                 <div className="sidebar-content">

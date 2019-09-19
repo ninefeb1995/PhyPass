@@ -15,19 +15,19 @@ export class Dashboard extends Component {
     componentDidMount() {
         DashBoardService.getListOfConveyor(1, 50, (res) => {
             if (res.data.err === 0) {
-                this.setState({listConveyors: res.data.data});
+                this.setState({ listConveyors: res.data.data });
             }
         });
 
         let intervalId = setInterval(() => {
             DashBoardService.getListOfConveyor(1, 50, (res) => {
                 if (res.data.err === 0) {
-                    this.setState({listConveyors: res.data.data});
+                    this.setState({ listConveyors: res.data.data });
                 }
             });
-        }, 5000);
+        }, 750);
 
-        this.setState({intervalId: intervalId});
+        this.setState({ intervalId });
     }
 
     componentWillUnmount() {
@@ -37,9 +37,9 @@ export class Dashboard extends Component {
     renderConveyor = () => {
         let conveyors = [];
         for (let i = 0; i < this.state.listConveyors.length; i++) {
-            let item = 
+            let item =
                 <div key={i} className="col-lg-3 d-flex align-items-stretch justify-content-center">
-                    <Conveyor information = {this.state.listConveyors[i]} />
+                    <Conveyor information={this.state.listConveyors[i]} />
                 </div>
             conveyors.push(item);
         }
